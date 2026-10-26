@@ -4,5 +4,6 @@ export { SegmentedToggle } from "./SegmentedToggle";
 export { SoonBadge } from "./SoonBadge";
 export { TextField } from "./TextField";
 export { TextLink } from "./TextLink";
-export { ToastProvider, useToast } from "./Toast";
+export { ToastProvider } from "./Toast";
+export { useToast } from "./useToast";
 export { TokenInput } from "./TokenInput";

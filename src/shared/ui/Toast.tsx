@@ -1,27 +1,13 @@
-import { createContext, useCallback, useContext, useMemo, useRef, useState } from "react";
-import type { ReactNode } from "react";
-import { cx } from "../lib/cx";
-
-type ToastKind = "success" | "error" | "info";
-
-type ToastItem = {
-  id: number;
-  kind: ToastKind;
-  message: string;
-};
-
-type ToastApi = {
-  show: (message: string, kind?: ToastKind) => void;
-  success: (message: string) => void;
-  error: (message: string) => void;
-};
-
-const ToastContext = createContext<ToastApi | null>(null);
+import { useCallback, useMemo, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
+import { cx } from '../lib/cx';
+import { ToastContext } from './toast-context';
+import type { ToastApi, ToastItem, ToastKind } from './toast-types';
 
 const dotColors: Record<ToastKind, string> = {
-  success: "bg-success",
-  error: "bg-danger",
-  info: "bg-brand",
+  success: 'bg-success',
+  error: 'bg-danger',
+  info: 'bg-brand',
 };
 
 export function ToastProvider({ children }: { children: ReactNode }) {
@@ -33,7 +19,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const show = useCallback(
-    (message: string, kind: ToastKind = "info") => {
+    (message: string, kind: ToastKind = 'info') => {
       const id = nextId.current++;
       setItems((current) => [...current, { id, kind, message }]);
       window.setTimeout(() => dismiss(id), 4000);
@@ -44,8 +30,8 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   const api = useMemo<ToastApi>(
     () => ({
       show,
-      success: (message) => show(message, "success"),
-      error: (message) => show(message, "error"),
+      success: (message) => show(message, 'success'),
+      error: (message) => show(message, 'error'),
     }),
     [show],
   );
@@ -57,10 +43,10 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         {items.map((item) => (
           <div
             key={item.id}
-            role={item.kind === "error" ? "alert" : "status"}
+            role={item.kind === 'error' ? 'alert' : 'status'}
             className="pointer-events-auto flex items-start gap-3 rounded-card border border-line bg-white px-5 py-4 shadow-brand"
           >
-            <span className={cx("mt-2 h-2 w-2 shrink-0 rounded-full", dotColors[item.kind])} />
+            <span className={cx('mt-2 h-2 w-2 shrink-0 rounded-full', dotColors[item.kind])} />
             <p className="flex-1 text-body2 text-ink">{item.message}</p>
             <button
               type="button"
@@ -75,12 +61,4 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       </div>
     </ToastContext.Provider>
   );
-}
-
-export function useToast() {
-  const context = useContext(ToastContext);
-  if (!context) {
-    throw new Error("useToast must be used inside ToastProvider");
-  }
-  return context;
 }

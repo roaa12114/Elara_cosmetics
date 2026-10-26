@@ -1,22 +1,8 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useState,
-  type ReactNode,
-} from 'react';
+import { useCallback, useState } from 'react';
+import type { ReactNode } from 'react';
+import { AuthContext } from './auth-context';
+import type { AuthState } from './auth-types';
 import type { Role, User } from '@shared/types';
-
-interface AuthState {
-  user: User | null;
-  token: string | null;
-  isAuthenticated: boolean;
-  hasRole: (...roles: Role[]) => boolean;
-  signIn: (token: string, user: User) => void;
-  signOut: () => void;
-}
-
-const AuthContext = createContext<AuthState | null>(null);
 
 const TOKEN_KEY = 'elara_access_token';
 const USER_KEY = 'elara_user';
@@ -55,17 +41,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [user]
   );
 
-  return (
-    <AuthContext.Provider
-      value={{ user, token, isAuthenticated: !!token, hasRole, signIn, signOut }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
-}
+  const value: AuthState = {
+    user,
+    token,
+    isAuthenticated: !!token,
+    hasRole,
+    signIn,
+    signOut,
+  };
 
-export function useAuth() {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error('useAuth must be used within AuthProvider');
-  return ctx;
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

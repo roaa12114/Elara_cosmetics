@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { AuthCard, Button, SegmentedToggle, TextField, TextLink } from '@/shared/ui';
 import { api } from '@/shared/lib/api-client';
-import { useAuth } from '@/shared/lib/auth-store';
+import { useAuth } from '@/shared/lib/useAuth';
 import type { ApiError, LoginData, LoginRequest, Role } from '@shared/types';
 
 const schema = z.object({

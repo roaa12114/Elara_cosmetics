@@ -1,6 +1,6 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import type { ReactNode } from 'react';
-import { useAuth } from '@shared/lib/auth-store';
+import { useAuth } from '@shared/lib/useAuth';
 import type { Role } from '@shared/types';
 
 const roleHome: Record<Role, string> = {
@@ -9,9 +9,12 @@ const roleHome: Record<Role, string> = {
   admin: '/admin',
 };
 
-// Protects seller/admin routes — bounces unauthenticated users to /sign-in,
-// and authenticated-but-wrong-role users to their own role's home.
-export function RequireRole({ roles }: { roles: Role[] }) {
+type RequireRoleProps = {
+  roles: Role[];
+  children?: ReactNode;
+};
+
+export function RequireRole({ roles, children }: RequireRoleProps) {
   const { isAuthenticated, hasRole, user } = useAuth();
   const location = useLocation();
 
@@ -23,11 +26,9 @@ export function RequireRole({ roles }: { roles: Role[] }) {
     return <Navigate to={roleHome[user?.role ?? 'customer']} replace />;
   }
 
-  return <Outlet />;
+  return <>{children ?? <Outlet />}</>;
 }
 
-// Protects auth routes — bounces already-authenticated users to their role home
-// so they can't re-login or re-register while signed in.
 export function PublicOnly({ children }: { children: ReactNode }) {
   const { isAuthenticated, user } = useAuth();
   if (isAuthenticated && user) {

@@ -1,5 +1,5 @@
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { useAuth } from '@shared/lib/auth-store';
+import { useAuth } from '@shared/lib/useAuth';
 import { cx } from '@shared/lib/cx';
 import { SoonBadge } from '@/shared/ui';
 import {
@@ -7,7 +7,7 @@ import {
   Truck, Image, BarChart3, Settings,
 } from 'lucide-react';
 
-type NavStatus = 'active' | 'soon';
+type NavStatus = 'active' | 'pending' | 'soon';
 
 type NavItem = {
   label: string;
@@ -17,19 +17,17 @@ type NavItem = {
   status: NavStatus;
 };
 
-// Per Q4:
-//   Enabled (active routes — page is built as we ship each phase):
-//     Customers, Sellers, Orders, Discounts, Categories, Content
-//   Disabled with Soon badge (no plan to build in this round):
-//     Dashboard, Shipping, Analytics, Settings
+// Per Q4: Customers/Sellers/Orders/Discounts/Categories/Content will be built in Phase 4
+// — for now they are pending (disabled, no Soon badge). Dashboard/Shipping/Analytics/
+// Settings have no backend — Soon badge (Rule #4).
 const navItems: NavItem[] = [
   { label: 'Dashboard', icon: LayoutDashboard, to: '#', end: true, status: 'soon' },
-  { label: 'Customers', icon: Users, to: '/admin/customers', end: false, status: 'active' },
-  { label: 'Sellers', icon: Store, to: '/admin/sellers', end: false, status: 'active' },
-  { label: 'Orders', icon: ShoppingCart, to: '/admin/orders', end: false, status: 'active' },
-  { label: 'Discounts', icon: Tag, to: '/admin/discounts', end: false, status: 'active' },
-  { label: 'Categories', icon: FolderTree, to: '/admin/categories', end: false, status: 'active' },
-  { label: 'Content', icon: Image, to: '/admin/content', end: false, status: 'active' },
+  { label: 'Customers', icon: Users, to: '/admin/customers', end: false, status: 'pending' },
+  { label: 'Sellers', icon: Store, to: '/admin/sellers', end: false, status: 'pending' },
+  { label: 'Orders', icon: ShoppingCart, to: '/admin/orders', end: false, status: 'pending' },
+  { label: 'Discounts', icon: Tag, to: '/admin/discounts', end: false, status: 'pending' },
+  { label: 'Categories', icon: FolderTree, to: '/admin/categories', end: false, status: 'pending' },
+  { label: 'Content', icon: Image, to: '/admin/content', end: false, status: 'pending' },
   { label: 'Shipping', icon: Truck, to: '#', end: false, status: 'soon' },
   { label: 'Analytics', icon: BarChart3, to: '#', end: false, status: 'soon' },
   { label: 'Settings', icon: Settings, to: '#', end: false, status: 'soon' },
@@ -76,7 +74,7 @@ export function AdminLayout() {
               >
                 <Icon className="w-4 h-4" />
                 <span>{item.label}</span>
-                <SoonBadge />
+                {item.status === 'soon' && <SoonBadge />}
               </div>
             );
           })}

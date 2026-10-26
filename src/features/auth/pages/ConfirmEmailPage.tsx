@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AuthCard, Button, TokenInput } from '@/shared/ui';
 import { api } from '@/shared/lib/api-client';
@@ -14,18 +14,9 @@ export function ConfirmEmailPage() {
   const [state, setState] = useState<ConfirmState>(tokenFromUrl ? 'confirming' : 'idle');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [tokenInput, setTokenInput] = useState('');
-  // StrictMode-safe: only auto-confirm each URL token once per mount.
   const lastConfirmedRef = useRef<string | null>(null);
 
-  useEffect(() => {
-    if (!tokenFromUrl) return;
-    if (lastConfirmedRef.current === tokenFromUrl) return;
-    lastConfirmedRef.current = tokenFromUrl;
-    void confirmToken(tokenFromUrl);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tokenFromUrl]);
-
-  async function confirmToken(token: string) {
+  const confirmToken = useCallback(async (token: string) => {
     setState('confirming');
     setErrorMessage(null);
     try {
@@ -36,7 +27,14 @@ export function ConfirmEmailPage() {
       setErrorMessage(error.message);
       setState('error');
     }
-  }
+  }, []);
+
+  useEffect(() => {
+    if (!tokenFromUrl) return;
+    if (lastConfirmedRef.current === tokenFromUrl) return;
+    lastConfirmedRef.current = tokenFromUrl;
+    void confirmToken(tokenFromUrl);
+  }, [tokenFromUrl, confirmToken]);
 
   function onPasteSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -66,15 +64,7 @@ export function ConfirmEmailPage() {
     );
   }
 
-  if (state === 'confirming') {
-    return (
-      <AuthCard title="Confirming your email" subtitle="One moment…">
-        <div className="text-body2 text-ink-secondary text-center">Verifying token…</div>
-      </AuthCard>
-    );
-  }
-
-  // state === 'idle' (no URL token, came here after sign-up) OR 'error' (URL token failed)
+  // state === 'idle' | 'confirming' | 'error' — form is visible in all three
   return (
     <AuthCard
       title="Check your email"
@@ -90,6 +80,7 @@ export function ConfirmEmailPage() {
           label="Confirmation token"
           value={tokenInput}
           onChange={(e) => setTokenInput(e.target.value)}
+          disabled={state === 'confirming'}
         />
         <Button type="submit" fullWidth loading={state === 'confirming'}>
           Confirm

@@ -1,5 +1,5 @@
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { useAuth } from '@shared/lib/auth-store';
+import { useAuth } from '@shared/lib/useAuth';
 import { cx } from '@shared/lib/cx';
 import { SoonBadge } from '@/shared/ui';
 import {
@@ -17,15 +17,14 @@ type NavItem = {
   status: NavStatus;
 };
 
-// Per Q3:
-//   Products, Orders: active
-//   Overview, Inventory: pending (disabled, no Soon badge — will be built)
-//   Earnings, Payouts, Promotions, Settings: soon (disabled, with Soon badge)
+// Overview route exists (/seller index → SellerDashboardPage). Products/Inventory/Orders
+// routes will be added in Phase 3 — for now they are pending (disabled, no Soon badge).
+// Earnings/Payouts/Promotions/Settings have no backend endpoints — Soon badge (Rule #4).
 const navItems: NavItem[] = [
-  { label: 'Overview', icon: LayoutDashboard, to: '/seller', end: true, status: 'pending' },
-  { label: 'Products', icon: Package, to: '/seller/products', end: false, status: 'active' },
+  { label: 'Overview', icon: LayoutDashboard, to: '/seller', end: true, status: 'active' },
+  { label: 'Products', icon: Package, to: '/seller/products', end: false, status: 'pending' },
   { label: 'Inventory', icon: Boxes, to: '/seller/inventory', end: false, status: 'pending' },
-  { label: 'Orders', icon: ShoppingCart, to: '/seller/orders', end: false, status: 'active' },
+  { label: 'Orders', icon: ShoppingCart, to: '/seller/orders', end: false, status: 'pending' },
   { label: 'Earnings', icon: Wallet, to: '#', end: false, status: 'soon' },
   { label: 'Payouts', icon: Banknote, to: '#', end: false, status: 'soon' },
   { label: 'Promotions', icon: Tag, to: '#', end: false, status: 'soon' },

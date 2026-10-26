@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { AuthCard, Button, SegmentedToggle, TextField, TextLink } from '@/shared/ui';
 import { api } from '@/shared/lib/api-client';
-import { useAuth } from '@/shared/lib/auth-store';
+import { useAuth } from '@/shared/lib/useAuth';
 import type { ApiError, LoginData, LoginRequest } from '@shared/types';
 
 const schema = z.object({
@@ -28,9 +28,6 @@ export function SellerSignInPage() {
     setSubmitError(null);
     try {
       const data = await api.post<LoginData>('/auth/login', values as LoginRequest);
-      // Backend may return role='seller' OR a different role if email belongs to
-      // a customer/admin. Only route to /seller if role matches; otherwise bounce
-      // to the role's actual home.
       signIn(data.accessToken, data.user);
       const home = data.user.role === 'seller' ? '/seller'
         : data.user.role === 'admin' ? '/admin'
