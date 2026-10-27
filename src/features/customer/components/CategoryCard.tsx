@@ -1,34 +1,33 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import type { Category } from '@shared/types';
 
-// Card is non-clickable for now (catalog page comes in script 11/12).
+// Category card = just an image (user provides complete images).
+// Clicking the image navigates to the category page.
 export function CategoryCard({ category }: { category: Category }) {
   const [imageError, setImageError] = useState(false);
   const showImage = category.image && !imageError;
 
   return (
-    <div className="rounded-card border border-line bg-white overflow-hidden flex flex-col">
-      <div className="aspect-[5/4] bg-primary-light">
-        {showImage ? (
-          <img
-            src={category.image}
-            alt={category.name}
-            className="w-full h-full object-cover"
-            onError={() => setImageError(true)}
-          />
-        ) : (
-          <div className="w-full h-full flex flex-col items-center justify-center gap-1 text-ink-muted">
-            <div className="text-h6 font-semibold">No image</div>
-            <div className="text-body2">Set image URL in admin</div>
-          </div>
-        )}
-      </div>
-      <div className="p-6 flex flex-col gap-1 items-center text-center">
-        <div className="text-h6 font-semibold text-ink">{category.name}</div>
-        {category.description && (
-          <div className="text-body2 text-ink-secondary">{category.description}</div>
-        )}
-      </div>
-    </div>
+    <Link
+      to={`/products?category=${category._id}`}
+      className="relative block w-full rounded-card-sm overflow-hidden bg-white transition-transform hover:scale-[1.02]"
+      style={{ aspectRatio: '628 / 298' }}
+    >
+      {showImage ? (
+        <img
+          src={category.image}
+          alt={category.name}
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ objectPosition: 'center center' }}
+          onError={() => setImageError(true)}
+        />
+      ) : (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 text-ink-muted">
+          <div className="text-h6 font-semibold">No image</div>
+          <div className="text-body2">Set image URL in admin</div>
+        </div>
+      )}
+    </Link>
   );
 }
