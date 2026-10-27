@@ -4,9 +4,6 @@ import { useAuth } from '@shared/lib/useAuth';
 
 type NavItem = { to: string; label: string; status: 'active' | 'pending' };
 
-// Per Figma customer shell — 4 items in the pink nav bar.
-// The mega menu (Products → Makeup/Skincare/Korean Beauty sub-items) is
-// deferred to script 15 (shells) per the open mega-menu decision.
 const navLinks: NavItem[] = [
   { to: '/', label: 'Home', status: 'active' },
   { to: '/products', label: 'Products', status: 'pending' },
@@ -35,9 +32,8 @@ export function CustomerLayout() {
 
   return (
     <div className="min-h-screen flex flex-col bg-surface">
-      <header className="border-b border-line bg-white">
-        {/* Top row: logo + search + account actions */}
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-6">
+      <header className="bg-white">
+        <div className="mx-auto flex h-[99px] w-full max-w-[1440px] items-center justify-between gap-6 px-20">
           <Link to="/" className="font-bold text-h5 text-ink">Elara</Link>
 
           <div className="flex-1 max-w-xl relative">
@@ -47,26 +43,29 @@ export function CustomerLayout() {
               placeholder="Search products..."
               disabled
               aria-label="Search products"
-              title="Search results page coming soon"
+              title="Coming soon"
               className="w-full h-10 rounded-pill border border-line bg-surface pl-11 pr-5 text-body2 text-ink placeholder:text-ink-muted focus:border-brand focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
             />
           </div>
 
           <div className="flex items-center gap-4 text-body2">
             {isAuthenticated && user ? (
-              <span className="text-ink-muted cursor-not-allowed" aria-disabled="true" title="Account page coming in script 08">
-                Hi, {user.name.split(' ')[0]}
-              </span>
+              <>
+                <span className="text-ink-secondary">Hi, {user.name.split(' ')[0]}</span>
+                <button type="button" onClick={() => signOut()} className="text-ink-secondary hover:text-ink">
+                  Log out
+                </button>
+              </>
             ) : (
               <Link to="/sign-in" className="text-ink-secondary hover:text-ink">Login</Link>
             )}
-            <span className="text-ink-muted cursor-not-allowed" aria-disabled="true" title="Language selector coming soon">English</span>
+            <span className="text-ink-muted cursor-not-allowed" aria-disabled="true" title="Coming soon">English</span>
             <Link to="/seller/sign-up" className="text-ink-secondary hover:text-ink">Sell with Us</Link>
             <button
               type="button"
               disabled
               aria-label="Cart"
-              title="Cart page coming in script 12"
+              title="Coming soon"
               className="text-ink-muted hover:text-brand disabled:cursor-not-allowed disabled:opacity-60"
             >
               <ShoppingCart className="w-5 h-5" />
@@ -75,7 +74,7 @@ export function CustomerLayout() {
               type="button"
               disabled
               aria-label="Wishlist"
-              title="Wishlist page coming in script 08"
+              title="Coming soon"
               className="text-ink-muted hover:text-brand disabled:cursor-not-allowed disabled:opacity-60"
             >
               <Heart className="w-5 h-5" />
@@ -83,12 +82,11 @@ export function CustomerLayout() {
           </div>
         </div>
 
-        {/* Bottom row: pink nav bar */}
-        <div className="bg-primary-light">
-          <div className="max-w-7xl mx-auto px-6 h-12 flex items-center gap-8 text-body2 font-medium">
+        <div className="bg-primary">
+          <div className="mx-auto flex h-20 w-full max-w-[1440px] items-center gap-8 px-20 text-body2 font-medium">
             {navLinks.map((l) =>
               l.status === 'active' ? (
-                <Link key={l.to} to={l.to} className="text-ink hover:text-brand">{l.label}</Link>
+                <Link key={l.to} to={l.to} className="text-ink hover:text-white">{l.label}</Link>
               ) : (
                 <span key={l.to} className="text-ink-muted cursor-not-allowed" aria-disabled="true">{l.label}</span>
               )
@@ -97,12 +95,12 @@ export function CustomerLayout() {
         </div>
       </header>
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-6 py-8">
+      <main className="w-full flex-1">
         <Outlet />
       </main>
 
       <footer className="border-t border-line bg-primary-light">
-        <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-2 lg:grid-cols-5 gap-8">
+        <div className="mx-auto grid w-full max-w-[1440px] grid-cols-6 gap-8 px-20 py-12">
           <div className="col-span-2 flex flex-col gap-3">
             <div className="font-bold text-h6 text-brand">Elara</div>
             <p className="text-body2 text-ink-secondary">
@@ -113,7 +111,7 @@ export function CustomerLayout() {
                 <span
                   key={s.abbr}
                   aria-label={s.label}
-                  title={s.label + ' (coming soon)'}
+                  title="Coming soon"
                   className="w-9 h-9 rounded-pill bg-white flex items-center justify-center text-body2 font-bold text-brand cursor-not-allowed"
                 >
                   {s.abbr}
@@ -137,8 +135,8 @@ export function CustomerLayout() {
         </div>
 
         <div className="border-t border-line">
-          <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div className="text-body2 text-ink-muted">© 2025 Elara Skincare &amp; Makeup</div>
+          <div className="mx-auto flex w-full max-w-[1440px] items-center justify-between gap-3 px-20 py-4">
+            <div className="text-body2 text-ink-muted">© {new Date().getFullYear()} Elara Skincare &amp; Makeup</div>
             <div className="flex gap-3 items-center text-body2 text-ink-muted">
               {paymentMethods.map((m, i) => (
                 <span key={m} className="flex items-center gap-3">
