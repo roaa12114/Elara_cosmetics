@@ -1,0 +1,1428 @@
+{
+  "info": {
+    "_postman_id": "e5ddbf82-fed5-437c-9535-b77d0d973bc1",
+    "name": "EAN E-Commerce Backend API",
+    "description": "Comprehensive Postman collection for E-Commerce Backend — Auth, Admin, Categories, Products, Banners, Promos, Cart, Checkout (Preview + Stripe Session with/without promo), Promo Validation, Reviews, Newsletters, Rewards, Notifications.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "55873103"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register Customer",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Customer\",\n  \"email\": \"customer10@gmail.com\",\n  \"password\": \"Password236@\",\n  \"phone\": \"+1234567890\",\n  \"address\": {\n    \"street\": \"123 Main St\",\n    \"city\": \"Metropolis\",\n    \"state\": \"Ottawa\",\n    \"country\": \"Canada\",\n    \"postalCode\": \"1024\"\n  }\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseURL}}/auth/register",
+              "host": ["{{baseURL}}"],
+              "path": ["auth", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register Seller",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Jane Seller\",\n  \"email\": \"seller2@example.com\",\n  \"password\": \"SellerPassword123!\",\n  \"phone\": \"+1987654321\",\n  \"address\": {\n    \"street\": \"456 Market St\",\n    \"city\": \"Commerce City\",\n    \"state\": \"CA\",\n    \"country\": \"USA\",\n    \"postalCode\": \"90001\"\n  }\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseURL}}/auth/register-seller",
+              "host": ["{{baseURL}}"],
+              "path": ["auth", "register-seller"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login (Customer)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData && jsonData.data && jsonData.data.accessToken) {",
+                  "        pm.collectionVariables.set(\"accessToken\", jsonData.data.accessToken);",
+                  "        pm.collectionVariables.set(\"customerAccessToken\", jsonData.data.accessToken);",
+                  "        console.log(\"Saved customerAccessToken\");",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n \"email\": \"customer10@gmail.com\",\n  \"password\": \"Password236@\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseURL}}/auth/login",
+              "host": ["{{baseURL}}"],
+              "path": ["auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData && jsonData.data && jsonData.data.accessToken) {",
+                  "        pm.collectionVariables.set(\"adminAccessToken\", jsonData.data.accessToken);",
+                  "        pm.collectionVariables.set(\"accessToken\", jsonData.data.accessToken);",
+                  "        console.log(\"Saved adminAccessToken\");",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"Admin123!@#\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseURL}}/auth/login",
+              "host": ["{{baseURL}}"],
+              "path": ["auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login (Seller)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"seller2@example.com\",\n  \"password\": \"SellerPassword123!\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseURL}}/auth/login",
+              "host": ["{{baseURL}}"],
+              "path": ["auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Confirm Email",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"INSERT_TOKEN_HERE\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseURL}}/auth/confirm-email",
+              "host": ["{{baseURL}}"],
+              "path": ["auth", "confirm-email"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Me",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/auth/me",
+              "host": ["{{baseURL}}"],
+              "path": ["auth", "me"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/auth/logout",
+              "host": ["{{baseURL}}"],
+              "path": ["auth", "logout"]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Authentication Endpoints"
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "List Products (Public)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/products?search=phone&minPrice=100&maxPrice=1500&sort=newest&page=1&limit=10",
+              "host": ["{{baseURL}}"],
+              "path": ["products"],
+              "query": [
+                { "key": "search", "value": "phone" },
+                { "key": "minPrice", "value": "100" },
+                { "key": "maxPrice", "value": "1500" },
+                { "key": "sort", "value": "newest" },
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Product By ID (Public)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/products/{{productId}}",
+              "host": ["{{baseURL}}"],
+              "path": ["products", "{{productId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Product (Admin/Seller)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Wireless Headphones\",\n  \"description\": \"Premium over-ear Bluetooth headphones.\",\n  \"price\": 199.99,\n  \"stock\": 50,\n  \"category\": \"{{demoCategoryId}}\",\n  \"images\": [\"https://example.com/images/headphones-1.jpg\"]\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseURL}}/products",
+              "host": ["{{baseURL}}"],
+              "path": ["products"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Product (Admin/Seller)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Headphones\",\n  \"price\": 179.99,\n  \"stock\": 45\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseURL}}/products/{{productId}}",
+              "host": ["{{baseURL}}"],
+              "path": ["products", "{{productId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Deactivate Product (Admin/Seller)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/products/{{productId}}",
+              "host": ["{{baseURL}}"],
+              "path": ["products", "{{productId}}"]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Product Endpoints"
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "List Categories (Public)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/categories?page=1&limit=10",
+              "host": ["{{baseURL}}"],
+              "path": ["categories"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Category (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{adminAccessToken}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Electronics2\",\n  \"description\": \"Electronic gadgets\",\n  \"image\": \"https://example.com/images/electronics.jpg\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseURL}}/categories",
+              "host": ["{{baseURL}}"],
+              "path": ["categories"]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Category Endpoints"
+    },
+    {
+      "name": "Admin - Users",
+      "item": [
+        {
+          "name": "List Users (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{adminAccessToken}}", "type": "string" }]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/admin/users?page=1&limit=10",
+              "host": ["{{baseURL}}"],
+              "path": ["admin", "users"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Admin User Management"
+    },
+    {
+      "name": "Admin - Sellers",
+      "item": [
+        {
+          "name": "List Sellers (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{adminAccessToken}}", "type": "string" }]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/admin/sellers?page=1&limit=10",
+              "host": ["{{baseURL}}"],
+              "path": ["admin", "sellers"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Admin Seller Management"
+    },
+    {
+      "name": "Admin - Banners",
+      "item": [
+        {
+          "name": "List Banners (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{adminAccessToken}}", "type": "string" }]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/admin/banners?page=1&limit=10",
+              "host": ["{{baseURL}}"],
+              "path": ["admin", "banners"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Banner (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{adminAccessToken}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Summer Mega Sale\",\n  \"image\": \"https://example.com/banners/summer.jpg\",\n  \"link\": \"/promos/summer\",\n  \"sortOrder\": 1,\n  \"isActive\": true\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseURL}}/admin/banners",
+              "host": ["{{baseURL}}"],
+              "path": ["admin", "banners"]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Admin Banner Management"
+    },
+    {
+      "name": "Admin - Promos",
+      "item": [
+        {
+          "name": "List Promos (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{adminAccessToken}}", "type": "string" }]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/admin/promos?page=1&limit=10",
+              "host": ["{{baseURL}}"],
+              "path": ["admin", "promos"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Promo (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{adminAccessToken}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"WELCOME20\",\n  \"discountType\": \"percentage\",\n  \"discountValue\": 20,\n  \"minOrderAmount\": 50,\n  \"maxDiscountAmount\": 100,\n  \"startsAt\": \"2026-09-01T00:00:00.000Z\",\n  \"expiresAt\": \"2026-12-31T23:59:59.000Z\",\n  \"usageLimit\": 500,\n  \"isActive\": true\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseURL}}/admin/promos",
+              "host": ["{{baseURL}}"],
+              "path": ["admin", "promos"]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Admin Promo Management"
+    },
+    {
+      "name": "Admin - Newsletters",
+      "item": [
+        {
+          "name": "List Subscribers",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{adminAccessToken}}", "type": "string" }]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/admin/newsletters?page=1&limit=10&status=active",
+              "host": ["{{baseURL}}"],
+              "path": ["admin", "newsletters"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                { "key": "status", "value": "active" }
+              ]
+            },
+            "description": "List newsletter subscribers. Filter by status (active | inactive). Admin only."
+          },
+          "response": []
+        },
+        {
+          "name": "Send Campaign",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData && jsonData.data) {",
+                  "        console.log(\"Total:\", jsonData.data.total);",
+                  "        console.log(\"Sent:\", jsonData.data.sent);",
+                  "        console.log(\"Failed:\", jsonData.data.failed);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{adminAccessToken}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subject\": \"🎉 Special Offer Just For You!\",\n  \"html\": \"<h1>Hello!</h1><p>Check out our latest deals at 20% off.</p>\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseURL}}/admin/newsletters/send",
+              "host": ["{{baseURL}}"],
+              "path": ["admin", "newsletters", "send"]
+            },
+            "description": "Send an email campaign to all subscribed users. Admin only."
+          },
+          "response": []
+        }
+      ],
+      "description": "Admin Newsletter Management — Issue 064"
+    },
+    {
+      "name": "Newsletter",
+      "item": [
+        {
+          "name": "Subscribe",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201 || pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData && jsonData.data && jsonData.data.newsletter) {",
+                  "        pm.collectionVariables.set(\"subscriberEmail\", jsonData.data.newsletter.email);",
+                  "        console.log(\"Subscribed:\", jsonData.data.newsletter.email);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{customerAccessToken}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"subscriber@example.com\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseURL}}/newsletters/subscribe",
+              "host": ["{{baseURL}}"],
+              "path": ["newsletters", "subscribe"]
+            },
+            "description": "Subscribe to newsletter. Optional auth — links userId if logged in."
+          },
+          "response": []
+        },
+        {
+          "name": "Unsubscribe",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"subscriber@example.com\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseURL}}/newsletters/unsubscribe",
+              "host": ["{{baseURL}}"],
+              "path": ["newsletters", "unsubscribe"]
+            },
+            "description": "Unsubscribe from newsletter. Public endpoint."
+          },
+          "response": []
+        }
+      ],
+      "description": "Newsletter — Issue 064"
+    },
+    {
+      "name": "Rewards",
+      "item": [
+        {
+          "name": "Get My Rewards",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData && jsonData.data) {",
+                  "        pm.collectionVariables.set(\"rewardPoints\", jsonData.data.rewardPoints);",
+                  "        console.log(\"Reward Points:\", jsonData.data.rewardPoints);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{customerAccessToken}}", "type": "string" }]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/rewards",
+              "host": ["{{baseURL}}"],
+              "path": ["rewards"]
+            },
+            "description": "Get the authenticated customer's reward points. Issue 065."
+          },
+          "response": []
+        }
+      ],
+      "description": "Loyalty / Reward Points — Issue 065"
+    },
+    {
+      "name": "orders",
+      "item": [
+        {
+          "name": "Create Order",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var jsonData = pm.response.json();",
+                  "    var order = jsonData.data && jsonData.data.order ? jsonData.data.order : jsonData.data;",
+                  "    if (order && order._id) {",
+                  "        pm.collectionVariables.set(\"orderId\", order._id);",
+                  "        console.log(\"Saved orderId:\", order._id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{customerAccessToken}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cartId\": \"{{cartId}}\",\n  \"shippingAddress\": {\n    \"street\": \"123 Main Street\",\n    \"city\": \"Cairo\",\n    \"country\": \"Egypt\",\n    \"postalCode\": \"11511\"\n  }\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseURL}}/orders",
+              "host": ["{{baseURL}}"],
+              "path": ["orders"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Order History",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{customerAccessToken}}", "type": "string" }]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/orders",
+              "host": ["{{baseURL}}"],
+              "path": ["orders"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Order By ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{customerAccessToken}}", "type": "string" }]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/orders/{{orderId}}",
+              "host": ["{{baseURL}}"],
+              "path": ["orders", "{{orderId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Order Status (Admin) — Processing",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{adminAccessToken}}", "type": "string" }]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"processing\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseURL}}/orders/admin/{{orderId}}/status",
+              "host": ["{{baseURL}}"],
+              "path": ["orders", "admin", "{{orderId}}", "status"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Seller list the orders that has his products",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{sellerAccessToken}}", "type": "string" }]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/seller/orders/",
+              "host": ["{{baseURL}}"],
+              "path": ["seller", "orders", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "seller list the orders that has his products with id",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{sellerAccessToken}}", "type": "string" }]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/seller/orders/{{orderId}}",
+              "host": ["{{baseURL}}"],
+              "path": ["seller", "orders", "{{orderId}}"]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Order Endpoints"
+    },
+    {
+      "name": "Wishlist",
+      "item": [
+        {
+          "name": "Add product to wishlist",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{customerAccessToken}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": \"{{productId}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseURL}}/wishlist",
+              "host": ["{{baseURL}}"],
+              "path": ["wishlist"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get all products in the wishlist",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{customerAccessToken}}", "type": "string" }]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/wishlist",
+              "host": ["{{baseURL}}"],
+              "path": ["wishlist"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete product from wishlist",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{customerAccessToken}}", "type": "string" }]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/wishlist/{{productId}}",
+              "host": ["{{baseURL}}"],
+              "path": ["wishlist", "{{productId}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Cart",
+      "item": [
+        {
+          "name": "Get Cart",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData && jsonData.data && jsonData.data.cart && jsonData.data.cart.cartId) {",
+                  "        pm.collectionVariables.set(\"cartId\", jsonData.data.cart.cartId);",
+                  "        console.log(\"Saved cartId:\", jsonData.data.cart.cartId);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{customerAccessToken}}", "type": "string" }]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/cart",
+              "host": ["{{baseURL}}"],
+              "path": ["cart"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add Item to Cart",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData && jsonData.data && jsonData.data.cart) {",
+                  "        var cart = jsonData.data.cart;",
+                  "        if (cart.cartId) {",
+                  "            pm.collectionVariables.set(\"cartId\", cart.cartId);",
+                  "            console.log(\"Saved cartId:\", cart.cartId);",
+                  "        }",
+                  "        if (cart.items && cart.items[0] && cart.items[0].product) {",
+                  "            pm.collectionVariables.set(\"cartProductId\", cart.items[0].product._id);",
+                  "        }",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{customerAccessToken}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": \"{{productId}}\",\n  \"quantity\": 2\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseURL}}/cart/items",
+              "host": ["{{baseURL}}"],
+              "path": ["cart", "items"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Cart Item Quantity",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{customerAccessToken}}", "type": "string" }]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 5\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseURL}}/cart/items/{{cartProductId}}",
+              "host": ["{{baseURL}}"],
+              "path": ["cart", "items", "{{cartProductId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Remove Cart Item",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{customerAccessToken}}", "type": "string" }]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/cart/items/{{cartProductId}}",
+              "host": ["{{baseURL}}"],
+              "path": ["cart", "items", "{{cartProductId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Clear Cart",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{customerAccessToken}}", "type": "string" }]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/cart",
+              "host": ["{{baseURL}}"],
+              "path": ["cart"]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Cart Management — Issues 026 → 030"
+    },
+    {
+      "name": "Checkout",
+      "item": [
+        {
+          "name": "1. Preview Checkout (No Promo)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData && jsonData.data && jsonData.data.order) {",
+                  "        pm.collectionVariables.set(\"checkoutTotal\", jsonData.data.order.totalAmount);",
+                  "        console.log(\"Order total (no promo):\", jsonData.data.order.totalAmount);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{customerAccessToken}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderId\": \"{{orderId}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseURL}}/checkout/preview",
+              "host": ["{{baseURL}}"],
+              "path": ["checkout", "preview"]
+            },
+            "description": "Preview an order (read-only). No promo applied."
+          },
+          "response": []
+        },
+        {
+          "name": "2. Preview Checkout (With Promo)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData && jsonData.data && jsonData.data.order) {",
+                  "        console.log(\"Preview total:\", jsonData.data.order.totalAmount);",
+                  "        console.log(\"Preview discount:\", jsonData.data.order.previewDiscount);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{customerAccessToken}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderId\": \"{{orderId}}\",\n  \"promoCode\": \"WELCOME20\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseURL}}/checkout/preview",
+              "host": ["{{baseURL}}"],
+              "path": ["checkout", "preview"]
+            },
+            "description": "Preview an order with promo (read-only). Does NOT persist the discount — shows previewDiscount only."
+          },
+          "response": []
+        },
+        {
+          "name": "3. Create Checkout Session (No Promo)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData && jsonData.data && jsonData.data.checkoutUrl) {",
+                  "        pm.collectionVariables.set(\"checkoutUrl\", jsonData.data.checkoutUrl);",
+                  "        pm.collectionVariables.set(\"checkoutSessionId\", jsonData.data.checkoutSessionId);",
+                  "        console.log(\"Open this URL to pay:\", jsonData.data.checkoutUrl);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{customerAccessToken}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderId\": \"{{orderId}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseURL}}/checkout",
+              "host": ["{{baseURL}}"],
+              "path": ["checkout"]
+            },
+            "description": "Create a Stripe Checkout Session — NO promo."
+          },
+          "response": []
+        },
+        {
+          "name": "4. Create Checkout Session (With Promo)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData && jsonData.data && jsonData.data.checkoutUrl) {",
+                  "        pm.collectionVariables.set(\"checkoutUrl\", jsonData.data.checkoutUrl);",
+                  "        pm.collectionVariables.set(\"checkoutSessionId\", jsonData.data.checkoutSessionId);",
+                  "        console.log(\"Discount applied:\", jsonData.data.discount);",
+                  "        console.log(\"Open this URL to pay:\", jsonData.data.checkoutUrl);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{customerAccessToken}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderId\": \"{{orderId}}\",\n  \"promoCode\": \"WELCOME20\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseURL}}/checkout/with-promo",
+              "host": ["{{baseURL}}"],
+              "path": ["checkout", "with-promo"]
+            },
+            "description": "Create a Stripe Checkout Session WITH promo discount applied to the order total first."
+          },
+          "response": []
+        }
+      ],
+      "description": "Checkout — Preview (read-only) + Stripe Session (with/without promo)"
+    },
+    {
+      "name": "Promo",
+      "item": [
+        {
+          "name": "Validate Promo Code",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{customerAccessToken}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"WELCOME20\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseURL}}/promos/validate",
+              "host": ["{{baseURL}}"],
+              "path": ["promos", "validate"]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Promo Code Validation — Issue 034"
+    },
+    {
+      "name": "Reviews",
+      "item": [
+        {
+          "name": "1. List Product Reviews (Public)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/products/{{productId}}/reviews?page=1&limit=10&sort=newest",
+              "host": ["{{baseURL}}"],
+              "path": ["products", "{{productId}}", "reviews"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                { "key": "sort", "value": "newest" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2. Create Review (Customer)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData && jsonData.data && jsonData.data.review && jsonData.data.review._id) {",
+                  "        pm.collectionVariables.set(\"reviewId\", jsonData.data.review._id);",
+                  "        console.log(\"Saved reviewId:\", jsonData.data.review._id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{customerAccessToken}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": 5,\n  \"comment\": \"Excellent product, highly recommended!\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseURL}}/products/{{productId}}/reviews",
+              "host": ["{{baseURL}}"],
+              "path": ["products", "{{productId}}", "reviews"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3. Update My Review (Customer)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{customerAccessToken}}", "type": "string" }]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": 4,\n  \"comment\": \"Updated review after using it for a week.\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseURL}}/reviews/{{reviewId}}",
+              "host": ["{{baseURL}}"],
+              "path": ["reviews", "{{reviewId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4. Delete My Review (Customer)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{customerAccessToken}}", "type": "string" }]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/reviews/{{reviewId}}",
+              "host": ["{{baseURL}}"],
+              "path": ["reviews", "{{reviewId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "5. Moderate Review (Admin) — Deactivate",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{adminAccessToken}}", "type": "string" }]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isActive\": false\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseURL}}/admin/reviews/{{reviewId}}",
+              "host": ["{{baseURL}}"],
+              "path": ["admin", "reviews", "{{reviewId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "6. Moderate Review (Admin) — Reactivate",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{adminAccessToken}}", "type": "string" }]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isActive\": true\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseURL}}/admin/reviews/{{reviewId}}",
+              "host": ["{{baseURL}}"],
+              "path": ["admin", "reviews", "{{reviewId}}"]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Reviews & Ratings — Issues 055, 056, 057, 058"
+    },
+    {
+      "name": "Notification",
+      "item": [
+        {
+          "name": "Get my notifications",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{customerAccessToken}}", "type": "string" }]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/notification",
+              "host": ["{{baseURL}}"],
+              "path": ["notification"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "mark as read by id",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{customerAccessToken}}", "type": "string" }]
+            },
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/notification/{{notificationId}}/read",
+              "host": ["{{baseURL}}"],
+              "path": ["notification", "{{notificationId}}", "read"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "mark all as read",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{customerAccessToken}}", "type": "string" }]
+            },
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/notification/read-all",
+              "host": ["{{baseURL}}"],
+              "path": ["notification", "read-all"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    { "key": "baseURL", "value": "http://localhost:5000/api" },
+    { "key": "accessToken", "value": "" },
+    { "key": "adminAccessToken", "value": "" },
+    { "key": "customerAccessToken", "value": "" },
+    { "key": "sellerAccessToken", "value": "" },
+    { "key": "adminEmail", "value": "admin@example.com" },
+    { "key": "adminPassword", "value": "Admin123!@#" },
+    { "key": "productId", "value": "" },
+    { "key": "cartId", "value": "" },
+    { "key": "cartProductId", "value": "" },
+    { "key": "orderId", "value": "" },
+    { "key": "checkoutTotal", "value": "" },
+    { "key": "checkoutUrl", "value": "" },
+    { "key": "checkoutSessionId", "value": "" },
+    { "key": "reviewId", "value": "" },
+    { "key": "notificationId", "value": "" },
+    { "key": "demoCategoryId", "value": "" },
+    { "key": "demoProductId", "value": "" },
+    { "key": "subscriberEmail", "value": "" },
+    { "key": "rewardPoints", "value": "" }
+  ]
+}

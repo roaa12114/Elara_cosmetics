@@ -1,16 +1,19 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { Category } from '@shared/types';
+import { categorySlug } from '../data/brands';
 
 // Category card = just an image (user provides complete images).
-// Clicking the image navigates to the category page.
+// Clicking the image navigates to the BrandsPage for that category
+// (e.g. "Makeup" → /brands/makeup, "Korean Beauty" → /brands/korean-beauty).
 export function CategoryCard({ category }: { category: Category }) {
   const [imageError, setImageError] = useState(false);
   const showImage = category.image && !imageError;
+  const slug = categorySlug(category.name);
 
   return (
     <Link
-      to={`/products?category=${category._id}`}
+      to={`/brands/${slug}`}
       className="relative block w-full rounded-card-sm overflow-hidden bg-white transition-transform hover:scale-[1.02]"
       style={{ aspectRatio: '628 / 298' }}
     >
