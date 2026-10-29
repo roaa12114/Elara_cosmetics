@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useProducts } from "@shared/hooks/useProducts";
 import { useCategories } from "@shared/hooks/useCategories";
 import { ProductCard } from "../components/ProductCard";
@@ -6,6 +7,7 @@ import { SkeletonCard } from "../components/SkeletonCard";
 import { formatCurrency } from "@shared/lib/utils";
 import { Heart, Plus, Star } from "lucide-react";
 import type { Category, Product } from "@shared/types";
+import { bundles } from "../data/bundles";
 
 export function HomePage() {
   const categories = useCategories({ limit: 3 });
@@ -50,21 +52,18 @@ function HeroSection() {
           "linear-gradient(180deg, rgba(255, 235, 240, 0.3) 0%, rgba(204, 98, 122, 0.1) 100%)",
       }}
     >
-      {/* Left image */}
       <img
         src="/images/home/hero-left.png"
         alt=""
         className="absolute hidden lg:block object-contain"
         style={{ width: "532px", height: "609px", left: "-11px", top: "0.5px" }}
       />
-      {/* Right image */}
       <img
         src="/images/home/hero-right.png"
         alt=""
         className="absolute hidden lg:block object-contain"
         style={{ width: "559px", height: "608px", right: "0", top: "1px" }}
       />
-      {/* Center content */}
       <div
         className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center"
         style={{ top: "144px", gap: "48px", width: "679px" }}
@@ -87,7 +86,7 @@ function HeroSection() {
             beauty ritual.
           </p>
         </div>
-        <ShopNowButton width="542px" />
+        <ShopNowButton width="542px" to="/offers" />
       </div>
     </section>
   );
@@ -100,14 +99,12 @@ function BlackFridayPromo() {
       className="w-full flex items-center justify-center"
       style={{ gap: "43px", height: "479px" }}
     >
-      {/* Left image */}
       <img
         src="/images/home/promo-left.png"
         alt=""
         className="hidden lg:block object-contain"
         style={{ width: "484px", height: "479px" }}
       />
-      {/* Center content */}
       <div
         className="flex flex-col items-end"
         style={{ width: "385px", gap: "48px" }}
@@ -129,9 +126,8 @@ function BlackFridayPromo() {
             Discover exclusive beauty deals made for your everday glow
           </p>
         </div>
-        <ShopNowButton width="385px" />
+        <ShopNowButton width="385px" to="/offers" />
       </div>
-      {/* Right image */}
       <img
         src="/images/home/promo-right.png"
         alt=""
@@ -143,15 +139,15 @@ function BlackFridayPromo() {
 }
 
 // === Shared: Shop Now button (black pill) ===
-function ShopNowButton({ width }: { width: string }) {
+function ShopNowButton({ width, to }: { width: string; to: string }) {
   return (
-    <button
-      type="button"
-      className="rounded-pill bg-ink text-white font-bold flex items-center justify-center transition-colors hover:bg-ink/90"
+    <Link
+      to={to}
+      className="rounded-pill bg-ink text-white font-bold flex items-center justify-center transition-colors hover:bg-ink/90 no-underline"
       style={{ width, height: "56px", padding: "8px 16px", gap: "8px" }}
     >
       <span style={{ fontSize: "18px", lineHeight: "28px" }}>Shop Now</span>
-    </button>
+    </Link>
   );
 }
 
@@ -186,7 +182,6 @@ function ShopByCategorySection({
         <EmptyState message="No categories yet — create them via admin to see this section." />
       ) : (
         <div className="w-full flex flex-col" style={{ gap: "24px" }}>
-          {/* Row 1: first 2 cards side by side */}
           <div
             style={{
               display: "grid",
@@ -198,13 +193,13 @@ function ShopByCategorySection({
               <CategoryCard key={c._id} category={c} />
             ))}
           </div>
-          {/* Row 2: remaining cards full width */}
           {categories.slice(2).map((c) => (
             <CategoryCard key={c._id} category={c} />
           ))}
         </div>
       )}
-      <ViewAllButton />
+      {/* No "View All" — backend has no all-categories listing endpoint, and
+          only 3 categories exist so all of them are already shown above. */}
     </section>
   );
 }
@@ -244,46 +239,25 @@ function NewAndNoteworthySection({
           ))}
         </div>
       )}
-      <ViewAllButton />
+      {/* No standalone /products listing route yet — route the user to /offers
+          (the closest thing to a product listing we have). */}
+      <ViewAllButton to="/offers" />
     </section>
   );
 }
 
-// === Section 5: Bundle & Save (static) ===
-const bundleCards = [
-  {
-    name: "Glow Essential Bundle",
-    subtitle: "Daily care for healthy skin",
-    price: 200,
-    originalPrice: 260,
-    badge: "Best Seller",
-    badgeColor: "gold" as const,
-  },
-  {
-    name: "Glow Essential Bundle",
-    subtitle: "Daily care for healthy skin",
-    price: 200,
-    originalPrice: 260,
-    badge: "New",
-    badgeColor: "white" as const,
-  },
-  {
-    name: "Glow Essential Bundle",
-    subtitle: "Daily care for healthy skin",
-    price: 200,
-    originalPrice: 260,
-    badge: "Save 20%",
-    badgeColor: "danger" as const,
-  },
-  {
-    name: "Glow Essential Bundle",
-    subtitle: "Daily care for healthy skin",
-    price: 200,
-    originalPrice: 260,
-    badge: "Ends in: 15:34;21",
-    badgeColor: "danger" as const,
-  },
-];
+// === Section 5: Bundle & Save (static decoration — no backend endpoint) ===
+const bundleCards = bundles.slice(0, 4).map((b) => ({
+  slug: b.slug,
+  name: b.name,
+  subtitle: b.description,
+  price: b.price,
+  originalPrice: b.originalPrice,
+  badge: b.badge,
+  badgeColor: (b.badgeColor === "ink" ? "gold" : b.badgeColor) as
+    | "gold"
+    | "danger",
+}));
 
 function BundleAndSaveSection() {
   return (
@@ -297,29 +271,21 @@ function BundleAndSaveSection() {
         style={{ gap: "24px" }}
       >
         {bundleCards.map((b, i) => (
-          <StaticBundleCard key={i} bundle={b} index={i} />
+          <StaticBundleCard key={b.slug} bundle={b} index={i} />
         ))}
       </div>
-      <ViewAllButton />
+      <ViewAllButton to="/bundles" />
     </section>
   );
 }
 
 // === Section 6: Brand Promos — 2 rows (2 top + 3 bottom) ===
 const brandPromos = [
-  { name: "COSRX", discount: "50%", image: "/images/home/brands/cosrx.png" },
-  {
-    name: "Charlotte Tilbury",
-    discount: "50%",
-    image: "/images/home/brands/charlotte-tilbury.png",
-  },
-  { name: "Anua", discount: "20%", image: "/images/home/brands/anua.png" },
-  {
-    name: "Charlotte Tilbury",
-    discount: "45%",
-    image: "/images/home/brands/charlotte-tilbury-2.png",
-  },
-  { name: "elf", discount: "10%", image: "/images/home/brands/elf.png" },
+  { name: "COSRX", discount: "50%", image: "/images/home/brands/cosrx.png", to: "/brands/korean-beauty/cosrx" },
+  { name: "Charlotte Tilbury", discount: "50%", image: "/images/home/brands/charlotte-tilbury.png", to: "/brands/makeup/charlotte-tilbury" },
+  { name: "Anua", discount: "20%", image: "/images/home/brands/anua.png", to: "/brands/korean-beauty/anua" },
+  { name: "Charlotte Tilbury", discount: "45%", image: "/images/home/brands/charlotte-tilbury-2.png", to: "/brands/makeup/charlotte-tilbury" },
+  { name: "elf", discount: "10%", image: "/images/home/brands/elf.png", to: "/brands/makeup/e-l-f" },
 ];
 
 function BrandPromosSection() {
@@ -330,7 +296,6 @@ function BrandPromosSection() {
       className="flex flex-col items-center w-full"
       style={{ gap: "24px" }}
     >
-      {/* Row 1: 2 cards */}
       <div
         className="w-full grid grid-cols-1 lg:grid-cols-2"
         style={{ gap: "25px" }}
@@ -339,7 +304,6 @@ function BrandPromosSection() {
           <BrandPromoCard key={i} promo={b} />
         ))}
       </div>
-      {/* Row 2: 3 cards */}
       <div
         className="w-full grid grid-cols-1 md:grid-cols-3"
         style={{ gap: "24px" }}
@@ -348,6 +312,7 @@ function BrandPromosSection() {
           <BrandPromoCard key={i} promo={b} />
         ))}
       </div>
+      {/* No "View All" — backend has no /brands listing endpoint. */}
     </section>
   );
 }
@@ -403,18 +368,20 @@ function BestDealsSection({
           })}
         </div>
       )}
+      <ViewAllButton to="/offers" />
     </section>
   );
 }
 
-// === Static Bundle Card (matches Figma Bundel Card) ===
+// === Static Bundle Card ===
 type BundleCardData = {
+  slug: string;
   name: string;
   subtitle: string;
   price: number;
   originalPrice?: number;
   badge?: string;
-  badgeColor?: "gold" | "white" | "danger";
+  badgeColor?: "gold" | "danger";
 };
 
 function StaticBundleCard({
@@ -430,14 +397,14 @@ function StaticBundleCard({
       : bundle.badgeColor === "danger"
         ? "bg-danger-dark"
         : "bg-white";
-  const badgeText = bundle.badgeColor === "white" ? "text-brand" : "text-white";
+  const badgeText = bundle.badgeColor === "danger" ? "text-white" : "text-ink";
 
   return (
-    <div
-      className="rounded-card-sm bg-surface border border-primary-light flex flex-col overflow-hidden"
+    <Link
+      to={`/bundles/${bundle.slug}`}
+      className="rounded-card-sm bg-surface border border-primary-light flex flex-col overflow-hidden no-underline transition-transform hover:scale-[1.02]"
       style={{ paddingBottom: "24px", gap: "24px" }}
     >
-      {/* Image area */}
       <div
         className="relative bg-white flex items-center justify-center"
         style={{ height: "289px" }}
@@ -457,7 +424,6 @@ function StaticBundleCard({
             (e.target as HTMLImageElement).style.display = "none";
           }}
         />
-        {/* Badge */}
         {bundle.badge && (
           <div
             className="absolute top-0 left-0 right-0 flex justify-between items-start p-3"
@@ -469,63 +435,47 @@ function StaticBundleCard({
             >
               <span className="text-body3">{bundle.badge}</span>
             </span>
-            <button
-              type="button"
+            <span
               aria-label="Add to wishlist"
               title="Wishlist coming soon"
-              className="w-6 h-6 flex items-center justify-center text-ink hover:text-brand cursor-not-allowed"
+              className="w-6 h-6 flex items-center justify-center text-ink cursor-not-allowed"
             >
               <Heart className="w-6 h-6" />
-            </button>
+            </span>
           </div>
         )}
         {!bundle.badge && (
-          <button
-            type="button"
+          <span
             aria-label="Add to wishlist"
             title="Wishlist coming soon"
-            className="absolute top-3 right-3 w-6 h-6 flex items-center justify-center text-ink hover:text-brand cursor-not-allowed"
+            className="absolute top-3 right-3 w-6 h-6 flex items-center justify-center text-ink cursor-not-allowed"
           >
             <Heart className="w-6 h-6" />
-          </button>
+          </span>
         )}
-        {/* Rating pill */}
         <div
           className="absolute flex items-end"
           style={{ left: "12px", bottom: "12px" }}
         >
           <div
             className="bg-line rounded-pill flex items-center"
-            style={{
-              width: "54px",
-              height: "24px",
-              padding: "4px",
-              gap: "4px",
-            }}
+            style={{ width: "54px", height: "24px", padding: "4px", gap: "4px" }}
           >
             <Star className="w-4 h-4 fill-gold text-gold" />
             <span className="text-body3 text-ink">4.5</span>
           </div>
         </div>
       </div>
-      {/* Content area */}
       <div className="flex flex-col" style={{ padding: "0 24px", gap: "16px" }}>
         <div className="flex flex-col" style={{ gap: "20px" }}>
-          {/* "3 products" pill */}
           <div
             className="bg-primary-200 rounded-pill flex items-center justify-center self-start"
-            style={{
-              width: "71px",
-              height: "24px",
-              padding: "8px",
-              gap: "4px",
-            }}
+            style={{ width: "71px", height: "24px", padding: "8px", gap: "4px" }}
           >
             <span className="font-medium text-body3 text-ink-secondary">
               3 product
             </span>
           </div>
-          {/* Name + subtitle */}
           <div className="flex flex-col" style={{ gap: "4px" }}>
             <div className="text-body1 text-secondary-800 line-clamp-1">
               {bundle.name}
@@ -535,7 +485,6 @@ function StaticBundleCard({
             </div>
           </div>
         </div>
-        {/* Price + button row */}
         <div
           className="flex justify-between items-center"
           style={{ gap: "162px" }}
@@ -553,31 +502,50 @@ function StaticBundleCard({
               </span>
             )}
           </div>
-          <button
-            type="button"
+          <span
             aria-label="Add to cart"
             title="Bundle cart flow coming soon"
-            className="rounded-pill bg-ink text-white flex items-center justify-center hover:bg-ink/90 transition-colors cursor-not-allowed shrink-0"
+            className="rounded-pill bg-ink text-white flex items-center justify-center shrink-0 cursor-not-allowed opacity-70"
             style={{ width: "40px", height: "40px" }}
           >
             <Plus className="w-6 h-6" />
-          </button>
+          </span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 
-// === Brand Promo Card — image fills the whole card (images contain everything) ===
+// === Brand Promo Card ===
 function BrandPromoCard({
   promo,
 }: {
-  promo: { name: string; discount: string; image: string };
+  promo: { name: string; discount: string; image: string; to?: string };
 }) {
+  if (promo.to) {
+    return (
+      <Link
+        to={promo.to}
+        className="rounded-card-sm overflow-hidden relative block no-underline transition-transform hover:scale-[1.02]"
+        style={{ aspectRatio: "627 / 282" }}
+      >
+        <img
+          src={promo.image}
+          alt={promo.name}
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ objectPosition: "center center" }}
+          onError={(e) => {
+            (e.target as HTMLImageElement).style.display = "none";
+          }}
+        />
+      </Link>
+    );
+  }
   return (
     <div
-      className="rounded-card-sm overflow-hidden relative"
+      className="rounded-card-sm overflow-hidden relative cursor-not-allowed"
       style={{ aspectRatio: "627 / 282" }}
+      title="Brand page coming soon"
     >
       <img
         src={promo.image}
@@ -592,7 +560,7 @@ function BrandPromoCard({
   );
 }
 
-// === Shared: Section title (Cormorant Garamond + thick underline) ===
+// === Shared: Section title ===
 function SectionTitle({ title }: { title: string }) {
   return (
     <div className="flex flex-col items-center" style={{ gap: "12px" }}>
@@ -607,20 +575,38 @@ function SectionTitle({ title }: { title: string }) {
   );
 }
 
-// === Shared: View All outline button (at end of section) ===
-function ViewAllButton() {
+// === Shared: View All outline button ===
+function ViewAllButton({
+  to,
+  disabled,
+  label = "View All",
+}: {
+  to?: string;
+  disabled?: boolean;
+  label?: string;
+}) {
+  if (to) {
+    return (
+      <Link
+        to={to}
+        className="rounded-pill border border-ink font-bold flex items-center justify-center text-ink-secondary hover:bg-ink/5 transition-colors no-underline"
+        style={{ width: "385px", height: "56px", padding: "8px 16px", gap: "8px" }}
+      >
+        <span style={{ fontSize: "18px", lineHeight: "28px" }}>{label}</span>
+      </Link>
+    );
+  }
   return (
     <button
       type="button"
-      className="rounded-pill border border-ink font-bold flex items-center justify-center text-ink-secondary hover:bg-ink/5 transition-colors"
-      style={{
-        width: "385px",
-        height: "56px",
-        padding: "8px 16px",
-        gap: "8px",
-      }}
+      disabled
+      title={disabled ? "Coming soon" : undefined}
+      className="rounded-pill border border-ink/40 font-bold flex items-center justify-center text-ink-muted/60 cursor-not-allowed"
+      style={{ width: "385px", height: "56px", padding: "8px 16px", gap: "8px" }}
     >
-      <span style={{ fontSize: "18px", lineHeight: "28px" }}>View All</span>
+      <span style={{ fontSize: "18px", lineHeight: "28px" }}>
+        {disabled ? "Soon" : label}
+      </span>
     </button>
   );
 }
