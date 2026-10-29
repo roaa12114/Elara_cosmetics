@@ -16,6 +16,7 @@ import { NotFoundPage } from "@pages/NotFoundPage";
 import { DevShowcasePage } from "@pages/DevShowcasePage";
 import { BrandsPage } from "@features/customer/pages/BrandsPage";
 import { BrandDetailPage } from "@features/customer/pages/BrandDetailPage";
+import { ProductDetailPage } from "@features/customer/pages/ProductDetailPage";
 
 export function AppRouter() {
   return (
@@ -74,6 +75,7 @@ export function AppRouter() {
           path="/brands/:categorySlug/:brandSlug"
           element={<BrandDetailPage />}
         />
+        <Route path="/products/:id" element={<ProductDetailPage />} />
       </Route>
 
       {/* Seller tree (dashboard only — auth routes are above under AuthLayout) */}

@@ -240,7 +240,7 @@ function NewAndNoteworthySection({
           style={{ gap: "24px" }}
         >
           {products.map((p) => (
-            <ProductCard key={p._id} product={p} rating={4.5} />
+            <ProductCard key={p._id} product={p} />
           ))}
         </div>
       )}
@@ -354,24 +354,41 @@ function BrandPromosSection() {
 
 // === Section 7: Best Deals for You ===
 const bestDealDecorations = [
-  { tag: 'Fragrance', rating: 4.5, priceMultiplier: 2.5 },
-  { tag: 'Fragrance', rating: 4.5, priceMultiplier: 2.5 },
-  { tag: 'Fragrance', rating: 4.5, priceMultiplier: 2.5 },
-  { tag: 'Fragrance', rating: 4.5, priceMultiplier: 2.5 },
+  { tag: "Fragrance", rating: 4.5, priceMultiplier: 2.5 },
+  { tag: "Fragrance", rating: 4.5, priceMultiplier: 2.5 },
+  { tag: "Fragrance", rating: 4.5, priceMultiplier: 2.5 },
+  { tag: "Fragrance", rating: 4.5, priceMultiplier: 2.5 },
 ];
 
-function BestDealsSection({ products, isLoading }: { products: Product[]; isLoading: boolean }) {
+function BestDealsSection({
+  products,
+  isLoading,
+}: {
+  products: Product[];
+  isLoading: boolean;
+}) {
   return (
-    <section className="flex flex-col items-center w-full" style={{ gap: '40px' }}>
+    <section
+      className="flex flex-col items-center w-full"
+      style={{ gap: "40px" }}
+    >
       <SectionTitle title="Best Deals for You" />
       {isLoading ? (
-        <div className="w-full grid grid-cols-2 lg:grid-cols-4" style={{ gap: '24px' }}>
-          {[0, 1, 2, 3].map((i) => <SkeletonCard key={i} />)}
+        <div
+          className="w-full grid grid-cols-2 lg:grid-cols-4"
+          style={{ gap: "24px" }}
+        >
+          {[0, 1, 2, 3].map((i) => (
+            <SkeletonCard key={i} />
+          ))}
         </div>
       ) : products.length === 0 ? (
         <EmptyState message="No products yet — check back soon." />
       ) : (
-        <div className="w-full grid grid-cols-2 lg:grid-cols-4" style={{ gap: '24px' }}>
+        <div
+          className="w-full grid grid-cols-2 lg:grid-cols-4"
+          style={{ gap: "24px" }}
+        >
           {products.map((p, i) => {
             const deco = bestDealDecorations[i] ?? bestDealDecorations[0];
             return (

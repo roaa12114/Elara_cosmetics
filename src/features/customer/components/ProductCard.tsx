@@ -28,7 +28,7 @@ type ProductCardProps = {
 
 export function ProductCard({
   product,
-  rating = 4.5,
+  rating,
   originalPrice,
   saleBadge,
   soldCount,
@@ -47,7 +47,8 @@ export function ProductCard({
   const showImage = image && !imageError;
   const showNewBadge = isNewProduct(product.createdAt);
 
-  function handleAddToCart() {
+  function handleAddToCart(e: React.MouseEvent<HTMLButtonElement>) {
+    e.stopPropagation();
     if (!isAuthenticated) {
       navigate("/sign-in");
       return;
@@ -64,7 +65,8 @@ export function ProductCard({
     );
   }
 
-  function handleAddToWishlist() {
+  function handleAddToWishlist(e: React.MouseEvent<HTMLButtonElement>) {
+    e.stopPropagation();
     if (!isAuthenticated) {
       navigate("/sign-in");
       return;
@@ -83,7 +85,8 @@ export function ProductCard({
 
   return (
     <div
-      className="rounded-card-sm bg-surface border border-primary-light flex flex-col"
+      onClick={() => navigate(`/products/${product._id}`)}
+      className="rounded-card-sm bg-surface border border-primary-light flex flex-col cursor-pointer"
       style={{ padding: "0 0 24px", gap: "24px" }}
     >
       {/* === Image area === */}
@@ -131,6 +134,22 @@ export function ProductCard({
                 <span className="font-medium text-body3 text-brand">New</span>
               </span>
             )}
+            {product.stock === 0 && (
+              <span
+                className="rounded-pill flex items-center justify-center"
+                style={{
+                  height: "24px",
+                  gap: "10px",
+                  padding: "4px 12px",
+                  backgroundColor: "#D1C4C9",
+                  color: "#6B6265",
+                }}
+              >
+                <span className="font-medium text-body3" style={{ color: "#6B6265" }}>
+                  Out of Stock
+                </span>
+              </span>
+            )}
             {saleBadge && (
               <span
                 className="bg-gold rounded-pill flex items-center justify-center"
@@ -172,24 +191,26 @@ export function ProductCard({
             <Heart className="w-6 h-6" />
           </button>
         </div>
-        {/* Rating pill — bottom-left of image area */}
-        <div
-          className="absolute flex items-end"
-          style={{ left: "12px", bottom: "12px" }}
-        >
+        {/* Rating pill — bottom-left of image area (only when rating is provided) */}
+        {rating !== undefined && (
           <div
-            className="bg-line rounded-pill flex items-center"
-            style={{
-              width: "54px",
-              height: "24px",
-              padding: "4px",
-              gap: "4px",
-            }}
+            className="absolute flex items-end"
+            style={{ left: "12px", bottom: "12px" }}
           >
-            <Star className="w-4 h-4 fill-gold text-gold" />
-            <span className="text-body3 text-ink">{rating.toFixed(1)}</span>
+            <div
+              className="bg-line rounded-pill flex items-center"
+              style={{
+                width: "54px",
+                height: "24px",
+                padding: "4px",
+                gap: "4px",
+              }}
+            >
+              <Star className="w-4 h-4 fill-gold text-gold" />
+              <span className="text-body3 text-ink">{rating.toFixed(1)}</span>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* === Content area === */}
@@ -206,9 +227,9 @@ export function ProductCard({
               <span className="font-medium text-body3">{tag}</span>
             </span>
           )}
-          {/* Category label (seller name as fallback) */}
+          {/* Category label */}
           <div className="text-body2 text-secondary-400">
-            {product.seller.name}
+            {product.category.name}
           </div>
           {/* Product name */}
           <div className="text-body1 text-secondary-800 line-clamp-2">
@@ -229,22 +250,24 @@ export function ProductCard({
             )}
           </div>
         </div>
-        {/* + button */}
-        <button
-          type="button"
-          onClick={handleAddToCart}
-          disabled={addToCart.isPending}
-          aria-label="Add to cart"
-          title="Add to cart"
-          className="rounded-pill bg-ink text-white flex items-center justify-center hover:bg-ink/90 transition-colors disabled:cursor-not-allowed disabled:opacity-60 shrink-0"
-          style={{ width: "40px", height: "40px" }}
-        >
-          {addToCart.isPending ? (
-            <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
-          ) : (
-            <Plus className="w-6 h-6" />
-          )}
-        </button>
+        {/* + button — hidden when out of stock */}
+        {product.stock > 0 && (
+          <button
+            type="button"
+            onClick={handleAddToCart}
+            disabled={addToCart.isPending}
+            aria-label="Add to cart"
+            title="Add to cart"
+            className="rounded-pill bg-ink text-white flex items-center justify-center hover:bg-ink/90 transition-colors disabled:cursor-not-allowed disabled:opacity-60 shrink-0"
+            style={{ width: "40px", height: "40px" }}
+          >
+            {addToCart.isPending ? (
+              <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+            ) : (
+              <Plus className="w-6 h-6" />
+            )}
+          </button>
+        )}
       </div>
     </div>
   );
