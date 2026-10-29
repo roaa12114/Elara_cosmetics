@@ -23,9 +23,6 @@ function isNewProduct(createdAt: string): boolean {
   return Date.now() - created < NEW_PRODUCT_MS;
 }
 
-// Reviews endpoint shape isn't confirmed yet — be permissive about which
-// fields hold the reviewer name / text / date so the page degrades gracefully
-// regardless of how the backend spells them.
 type Review = {
   reviewer?: { name?: string } | string | null;
   user?: { name?: string } | string | null;
@@ -39,13 +36,9 @@ type Review = {
 };
 
 function getReviewerName(review: Review): string {
-  if (review.reviewer && typeof review.reviewer === 'object' && review.reviewer.name) {
-    return review.reviewer.name;
-  }
+  if (review.reviewer && typeof review.reviewer === 'object' && review.reviewer.name) return review.reviewer.name;
   if (typeof review.reviewer === 'string' && review.reviewer.trim()) return review.reviewer;
-  if (review.user && typeof review.user === 'object' && review.user.name) {
-    return review.user.name;
-  }
+  if (review.user && typeof review.user === 'object' && review.user.name) return review.user.name;
   if (typeof review.user === 'string' && review.user.trim()) return review.user;
   if (review.name) return review.name;
   return 'Anonymous';
@@ -60,11 +53,7 @@ function getReviewDate(review: Review): string {
   if (!raw) return '';
   const d = new Date(raw);
   if (Number.isNaN(d.getTime())) return '';
-  return d.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  });
+  return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 }
 
 function getReviewRating(review: Review): number {
@@ -76,12 +65,7 @@ function StarRow({ rating }: { rating: number }) {
   return (
     <div className="flex items-center" style={{ gap: '2px' }}>
       {[0, 1, 2, 3, 4].map((i) => (
-        <Star
-          key={i}
-          className={`w-4 h-4 ${
-            i < rating ? 'fill-gold text-gold' : 'text-line-strong'
-          }`}
-        />
+        <Star key={i} className={`w-4 h-4 ${i < rating ? 'fill-gold text-gold' : 'text-line-strong'}`} />
       ))}
     </div>
   );
@@ -102,26 +86,19 @@ export function ProductDetailPage() {
   const [imageErrors, setImageErrors] = useState<Record<number, boolean>>({});
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState<'black' | 'red'>('black');
+  const [activeTab, setActiveTab] = useState<'Product Info' | 'How to Use' | 'Ingredients'>('Product Info');
 
   const addToCart = useAddToCart();
   const addToWishlist = useAddToWishlist();
 
-  // Fetch reviews via React Query — avoids calling setState synchronously in
-  // an effect body (which would trip react-hooks/set-state-in-effect).
   const reviewsQuery = useQuery({
     queryKey: ['product-reviews', id],
-    queryFn: () =>
-      api.get<{ reviews?: Review[]; total?: number }>(
-        `/products/${id}/reviews`,
-      ),
+    queryFn: () => api.get<{ reviews?: Review[]; total?: number }>(`/products/${id}/reviews`),
     enabled: !!id,
   });
-  const reviews: Review[] = Array.isArray(reviewsQuery.data?.reviews)
-    ? reviewsQuery.data!.reviews
-    : [];
+  const reviews: Review[] = Array.isArray(reviewsQuery.data?.reviews) ? reviewsQuery.data!.reviews : [];
   const reviewsLoading = reviewsQuery.isLoading;
 
-  // Reset local UI state when navigating between products.
   /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     setSelectedImageIndex(0);
@@ -131,10 +108,7 @@ export function ProductDetailPage() {
   /* eslint-enable react-hooks/set-state-in-effect */
 
   const images = product?.images ?? [];
-  const safeIndex =
-    images.length === 0
-      ? 0
-      : Math.min(selectedImageIndex, images.length - 1);
+  const safeIndex = images.length === 0 ? 0 : Math.min(selectedImageIndex, images.length - 1);
   const visibleImage = images[safeIndex];
   const hasVisibleImage = !!visibleImage && !imageErrors[safeIndex];
   const showNewBadge = product ? isNewProduct(product.createdAt) : false;
@@ -143,67 +117,38 @@ export function ProductDetailPage() {
   const canIncrease = quantity < maxQty;
   const canDecrease = quantity > 1;
 
-  function handleIncrease() {
-    if (canIncrease) setQuantity((q) => q + 1);
-  }
-  function handleDecrease() {
-    if (canDecrease) setQuantity((q) => q - 1);
-  }
+  function handleIncrease() { if (canIncrease) setQuantity((q) => q + 1); }
+  function handleDecrease() { if (canDecrease) setQuantity((q) => q - 1); }
 
   function handleAddToCart() {
     if (!product) return;
-    if (!isAuthenticated) {
-      navigate('/sign-in');
-      return;
-    }
-    addToCart.mutate(
-      { productId: product._id, quantity },
-      {
-        onSuccess: () => toast.success('Added to cart'),
-        onError: (err: unknown) => {
-          const error = err as { message?: string };
-          toast.error(error?.message ?? 'Failed to add to cart');
-        },
-      },
-    );
+    if (!isAuthenticated) { navigate('/sign-in'); return; }
+    addToCart.mutate({ productId: product._id, quantity }, {
+      onSuccess: () => toast.success('Added to cart'),
+      onError: (err: unknown) => { const error = err as { message?: string }; toast.error(error?.message ?? 'Failed to add to cart'); },
+    });
   }
 
   function handleAddToWishlist() {
     if (!product) return;
-    if (!isAuthenticated) {
-      navigate('/sign-in');
-      return;
-    }
-    addToWishlist.mutate(
-      { productId: product._id },
-      {
-        onSuccess: () => toast.success('Added to wishlist'),
-        onError: (err: unknown) => {
-          const error = err as { message?: string };
-          toast.error(error?.message ?? 'Failed to add to wishlist');
-        },
-      },
-    );
+    if (!isAuthenticated) { navigate('/sign-in'); return; }
+    addToWishlist.mutate({ productId: product._id }, {
+      onSuccess: () => toast.success('Added to wishlist'),
+      onError: (err: unknown) => { const error = err as { message?: string }; toast.error(error?.message ?? 'Failed to add to wishlist'); },
+    });
   }
 
   const relatedProducts: Product[] = product
     ? (relatedQuery.data?.products ?? [])
-        .filter(
-          (p) =>
-            p.category._id === product.category._id && p._id !== product._id,
-        )
+        .filter((p) => p.category._id === product.category._id && p._id !== product._id)
         .slice(0, 4)
     : [];
 
   if (isLoading) {
     return (
-      <div
-        className="mx-auto w-full max-w-[1280px] px-6 lg:px-20 py-10 flex flex-col"
-        style={{ gap: '40px' }}
-      >
+      <div className="mx-auto w-full max-w-[1280px] px-6 lg:px-20 py-10 flex flex-col" style={{ gap: '40px' }}>
         <div className="grid grid-cols-1 lg:grid-cols-2" style={{ gap: '48px' }}>
-          <SkeletonCard />
-          <SkeletonCard />
+          <SkeletonCard /><SkeletonCard />
         </div>
       </div>
     );
@@ -213,12 +158,7 @@ export function ProductDetailPage() {
     return (
       <div className="max-w-[1280px] mx-auto px-6 lg:px-20 py-16 text-center">
         <h1 className="text-h5 font-semibold text-ink">Product not found</h1>
-        <Link
-          to="/"
-          className="mt-6 inline-block text-body1 font-bold text-brand hover:underline"
-        >
-          Back to home →
-        </Link>
+        <Link to="/" className="mt-6 inline-block text-body1 font-bold text-brand hover:underline">Back to home →</Link>
       </div>
     );
   }
@@ -226,56 +166,25 @@ export function ProductDetailPage() {
   const catSlug = categorySlug(product.category.name);
 
   return (
-    <div
-      className="mx-auto w-full max-w-[1280px] px-6 lg:px-20 py-10 flex flex-col"
-      style={{ gap: '40px' }}
-    >
+    <div className="mx-auto w-full max-w-[1280px] px-6 lg:px-20 py-10 flex flex-col" style={{ gap: '40px' }}>
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-body1" aria-label="Breadcrumb">
-        <Link to="/" className="text-ink-secondary hover:text-ink">
-          Home
-        </Link>
+        <Link to="/" className="text-ink-secondary hover:text-ink">Home</Link>
         <span className="text-ink-muted">/</span>
         <span className="text-ink-secondary">Products</span>
         <span className="text-ink-muted">/</span>
-        <Link
-          to={`/brands/${catSlug}`}
-          className="text-ink-secondary hover:text-ink"
-        >
-          {product.category.name}
-        </Link>
+        <Link to={`/brands/${catSlug}`} className="text-ink-secondary hover:text-ink">{product.category.name}</Link>
         <span className="text-ink-muted">/</span>
         <span className="text-ink font-medium">{product.name}</span>
       </nav>
 
       {/* 2-column layout */}
       <div className="grid grid-cols-1 lg:grid-cols-2" style={{ gap: '48px' }}>
-        {/* === Left: image gallery === */}
+        {/* Left: image gallery */}
         <div className="flex flex-col" style={{ gap: '16px' }}>
-          {/* Main image */}
-          <div
-            className="bg-white rounded-card-sm border border-primary-light overflow-hidden relative flex items-center justify-center"
-            style={{ aspectRatio: '1 / 1', minHeight: '400px' }}
-          >
+          <div className="bg-white rounded-card-sm border border-primary-light overflow-hidden relative flex items-center justify-center" style={{ aspectRatio: '1 / 1', minHeight: '400px' }}>
             {hasVisibleImage ? (
-              <img
-                src={visibleImage}
-                alt={product.name}
-                className="object-contain"
-                style={{
-                  maxWidth: '100%',
-                  maxHeight: '100%',
-                  width: '80%',
-                  height: '80%',
-                  filter: 'drop-shadow(0px 8px 24px rgba(102, 102, 102, 0.16))',
-                }}
-                onError={() =>
-                  setImageErrors((prev) => ({
-                    ...prev,
-                    [safeIndex]: true,
-                  }))
-                }
-              />
+              <img src={visibleImage} alt={product.name} className="object-contain" style={{ maxWidth: '100%', maxHeight: '100%', width: '80%', height: '80%', filter: 'drop-shadow(0px 8px 24px rgba(102, 102, 102, 0.16))' }} onError={() => setImageErrors((prev) => ({ ...prev, [safeIndex]: true }))} />
             ) : (
               <div className="flex flex-col items-center justify-center gap-1 text-ink-muted">
                 <div className="text-h6 font-semibold">No image</div>
@@ -283,39 +192,17 @@ export function ProductDetailPage() {
               </div>
             )}
           </div>
-
-          {/* Thumbnail strip */}
           {images.length > 0 && (
             <div className="flex items-center flex-wrap" style={{ gap: '12px' }}>
               {images.map((img, idx) => {
                 const isErrored = imageErrors[idx];
                 const isSelected = idx === safeIndex;
                 return (
-                  <button
-                    key={`${img}-${idx}`}
-                    type="button"
-                    onClick={() => setSelectedImageIndex(idx)}
-                    aria-label={`View image ${idx + 1}`}
-                    aria-pressed={isSelected}
-                    className={`bg-white rounded-card-sm border overflow-hidden flex items-center justify-center transition-colors ${
-                      isSelected
-                        ? 'border-brand'
-                        : 'border-line hover:border-line-strong'
-                    }`}
-                    style={{ width: '80px', height: '80px', padding: '4px' }}
-                  >
-                    {isErrored ? (
-                      <span className="text-body3 text-ink-muted">No img</span>
-                    ) : (
-                      <img
-                        src={img}
-                        alt={`${product.name} ${idx + 1}`}
-                        className="object-contain"
-                        style={{ maxWidth: '100%', maxHeight: '100%' }}
-                        onError={() =>
-                          setImageErrors((prev) => ({ ...prev, [idx]: true }))
-                        }
-                      />
+                  <button key={`${img}-${idx}`} type="button" onClick={() => setSelectedImageIndex(idx)} aria-label={`View image ${idx + 1}`} aria-pressed={isSelected}
+                    className={`bg-white rounded-card-sm border overflow-hidden flex items-center justify-center transition-colors ${isSelected ? 'border-brand' : 'border-line hover:border-line-strong'}`}
+                    style={{ width: '80px', height: '80px', padding: '4px' }}>
+                    {isErrored ? <span className="text-body3 text-ink-muted">No img</span> : (
+                      <img src={img} alt={`${product.name} ${idx + 1}`} className="object-contain" style={{ maxWidth: '100%', maxHeight: '100%' }} onError={() => setImageErrors((prev) => ({ ...prev, [idx]: true }))} />
                     )}
                   </button>
                 );
@@ -324,277 +211,100 @@ export function ProductDetailPage() {
           )}
         </div>
 
-        {/* === Right: product info === */}
+        {/* Right: product info */}
         <div className="flex flex-col" style={{ gap: '24px' }}>
-          {/* Top row: badges + heart */}
-          <div
-            className="flex items-start justify-between"
-            style={{ gap: '16px' }}
-          >
+          <div className="flex items-start justify-between" style={{ gap: '16px' }}>
             <div className="flex items-center" style={{ gap: '8px' }}>
               {showNewBadge && (
-                <span
-                  className="bg-white rounded-pill flex items-center justify-center border border-primary-light"
-                  style={{ padding: '4px 12px', height: '24px' }}
-                >
+                <span className="bg-white rounded-pill flex items-center justify-center border border-primary-light" style={{ padding: '4px 12px', height: '24px' }}>
                   <span className="font-medium text-body3 text-brand">New</span>
                 </span>
               )}
               {product.stock === 0 && (
-                <span
-                  className="rounded-pill flex items-center justify-center"
-                  style={{
-                    backgroundColor: '#D1C4C9',
-                    color: '#6B6265',
-                    padding: '4px 12px',
-                    height: '24px',
-                  }}
-                >
-                  <span
-                    className="font-medium text-body3"
-                    style={{ color: '#6B6265' }}
-                  >
-                    Out of Stock
-                  </span>
+                <span className="rounded-pill flex items-center justify-center" style={{ backgroundColor: '#D1C4C9', color: '#6B6265', padding: '4px 12px', height: '24px' }}>
+                  <span className="font-medium text-body3" style={{ color: '#6B6265' }}>Out of Stock</span>
                 </span>
               )}
             </div>
-            <button
-              type="button"
-              onClick={handleAddToWishlist}
-              disabled={addToWishlist.isPending}
-              aria-label="Add to wishlist"
-              className="w-6 h-6 flex items-center justify-center text-ink hover:text-brand transition-colors disabled:cursor-not-allowed disabled:opacity-60"
-            >
+            <button type="button" onClick={handleAddToWishlist} disabled={addToWishlist.isPending} aria-label="Add to wishlist"
+              className="w-6 h-6 flex items-center justify-center text-ink hover:text-brand transition-colors disabled:cursor-not-allowed disabled:opacity-60">
               <Heart className="w-6 h-6" />
             </button>
           </div>
 
-          {/* Product name */}
-          <h1
-            className="font-sans"
-            style={{
-              fontSize: '32px',
-              fontWeight: 500,
-              color: '#6B6265',
-              lineHeight: '38px',
-              margin: 0,
-            }}
-          >
-            {product.name}
-          </h1>
+          <h1 className="font-sans" style={{ fontSize: '32px', fontWeight: 500, color: '#6B6265', lineHeight: '38px', margin: 0 }}>{product.name}</h1>
+          <div style={{ fontSize: '16px', color: '#8C7B81' }}>{product.category.name}</div>
+          <div className="font-sans" style={{ fontSize: '24px', fontWeight: 500, color: '#51424A', lineHeight: '30px' }}>Size: 50ml</div>
 
-          {/* Category label */}
-          <div style={{ fontSize: '16px', color: '#8C7B81' }}>
-            {product.category.name}
-          </div>
-
-          {/* Static size label */}
-          <div
-            className="font-sans"
-            style={{
-              fontSize: '24px',
-              fontWeight: 500,
-              color: '#51424A',
-              lineHeight: '30px',
-            }}
-          >
-            Size: 50ml
-          </div>
-
-          {/* Static color picker */}
           <div className="flex flex-col" style={{ gap: '12px' }}>
-            <div
-              className="font-sans"
-              style={{
-                fontSize: '16px',
-                color: '#8C7B81',
-                letterSpacing: '0.05em',
-              }}
-            >
-              BLUSH COLOR: Black Cherry
-            </div>
+            <div className="font-sans" style={{ fontSize: '16px', color: '#8C7B81', letterSpacing: '0.05em' }}>BLUSH COLOR: Black Cherry</div>
             <div className="flex items-center" style={{ gap: '12px' }}>
-              <button
-                type="button"
-                onClick={() => setSelectedColor('red')}
-                aria-label="Black Cherry color"
-                aria-pressed={selectedColor === 'red'}
-                className="rounded-full transition-all"
-                style={{
-                  width: '32px',
-                  height: '32px',
-                  backgroundColor: '#55273E',
-                  border:
-                    selectedColor === 'red'
-                      ? '2px solid #98465c'
-                      : '2px solid transparent',
-                  cursor: 'pointer',
-                }}
-              />
-              <button
-                type="button"
-                onClick={() => setSelectedColor('black')}
-                aria-label="Black color"
-                aria-pressed={selectedColor === 'black'}
-                className="rounded-full transition-all"
-                style={{
-                  width: '32px',
-                  height: '32px',
-                  backgroundColor: '#1A1A1A',
-                  border:
-                    selectedColor === 'black'
-                      ? '2px solid #98465c'
-                      : '2px solid transparent',
-                  cursor: 'pointer',
-                }}
-              />
+              <button type="button" onClick={() => setSelectedColor('red')} aria-label="Black Cherry color" aria-pressed={selectedColor === 'red'} className="rounded-full transition-all"
+                style={{ width: '32px', height: '32px', backgroundColor: '#55273E', border: selectedColor === 'red' ? '2px solid #98465c' : '2px solid transparent', cursor: 'pointer' }} />
+              <button type="button" onClick={() => setSelectedColor('black')} aria-label="Black color" aria-pressed={selectedColor === 'black'} className="rounded-full transition-all"
+                style={{ width: '32px', height: '32px', backgroundColor: '#1A1A1A', border: selectedColor === 'black' ? '2px solid #98465c' : '2px solid transparent', cursor: 'pointer' }} />
             </div>
           </div>
 
-          {/* Price */}
-          <div
-            className="font-sans"
-            style={{
-              fontSize: '32px',
-              fontWeight: 700,
-              color: '#000000',
-              lineHeight: '38px',
-            }}
-          >
-            {formatCurrency(product.price)}
-          </div>
+          <div className="font-sans" style={{ fontSize: '32px', fontWeight: 700, color: '#000000', lineHeight: '38px' }}>{formatCurrency(product.price)}</div>
+          <div style={{ fontSize: '18px', color: '#51424A' }}>Current Stock: {product.stock}</div>
 
-          {/* Stock info */}
-          <div style={{ fontSize: '18px', color: '#51424A' }}>
-            Current Stock: {product.stock}
-          </div>
-
-          {/* Quantity selector */}
           <div className="flex items-center" style={{ gap: '16px' }}>
-            <div
-              className="flex items-center rounded-pill border border-line-strong bg-white"
-              style={{ padding: '4px' }}
-            >
-              <button
-                type="button"
-                onClick={handleDecrease}
-                disabled={!canDecrease}
-                aria-label="Decrease quantity"
-                className="flex items-center justify-center text-ink hover:text-brand transition-colors disabled:cursor-not-allowed disabled:opacity-50"
-                style={{ width: '32px', height: '32px' }}
-              >
+            <div className="flex items-center rounded-pill border border-line-strong bg-white" style={{ padding: '4px' }}>
+              <button type="button" onClick={handleDecrease} disabled={!canDecrease} aria-label="Decrease quantity" className="flex items-center justify-center text-ink hover:text-brand transition-colors disabled:cursor-not-allowed disabled:opacity-50" style={{ width: '32px', height: '32px' }}>
                 <Minus className="w-4 h-4" />
               </button>
-              <span
-                className="font-sans font-medium text-ink"
-                style={{
-                  minWidth: '40px',
-                  textAlign: 'center',
-                  fontSize: '16px',
-                }}
-              >
-                {quantity}
-              </span>
-              <button
-                type="button"
-                onClick={handleIncrease}
-                disabled={!canIncrease}
-                aria-label="Increase quantity"
-                className="flex items-center justify-center text-ink hover:text-brand transition-colors disabled:cursor-not-allowed disabled:opacity-50"
-                style={{ width: '32px', height: '32px' }}
-              >
+              <span className="font-sans font-medium text-ink" style={{ minWidth: '40px', textAlign: 'center', fontSize: '16px' }}>{quantity}</span>
+              <button type="button" onClick={handleIncrease} disabled={!canIncrease} aria-label="Increase quantity" className="flex items-center justify-center text-ink hover:text-brand transition-colors disabled:cursor-not-allowed disabled:opacity-50" style={{ width: '32px', height: '32px' }}>
                 <Plus className="w-4 h-4" />
               </button>
             </div>
           </div>
 
-          {/* Add to cart button */}
-          <Button
-            type="button"
-            variant="primary"
-            fullWidth
-            onClick={handleAddToCart}
-            loading={addToCart.isPending}
-            disabled={product.stock === 0}
-          >
+          <Button type="button" variant="primary" fullWidth onClick={handleAddToCart} loading={addToCart.isPending} disabled={product.stock === 0}>
             <ShoppingCart className="w-5 h-5" />
             Add to Cart
           </Button>
         </div>
       </div>
 
-      {/* Description */}
+      {/* Description with 3 tabs */}
       <section className="flex flex-col" style={{ gap: '16px' }}>
-        <h2
-          className="font-sans font-bold text-ink"
-          style={{ fontSize: '24px', lineHeight: '30px' }}
-        >
-          Product Description
-        </h2>
-        <p
-          className="text-body1 text-ink-secondary"
-          style={{ lineHeight: '28px', whiteSpace: 'pre-wrap' }}
-        >
-          {product.description || 'No description available.'}
+        <div className="flex items-center gap-2">
+          {(['Product Info', 'How to Use', 'Ingredients'] as const).map((tab) => (
+            <button key={tab} type="button" onClick={() => setActiveTab(tab)}
+              className={activeTab === tab ? 'bg-ink text-white rounded-pill px-6 py-2 text-body2 font-medium' : 'border border-ink text-ink-secondary rounded-pill px-6 py-2 text-body2 font-medium hover:border-brand hover:text-brand transition-colors'}>
+              {tab}
+            </button>
+          ))}
+        </div>
+        <p className="text-body1 text-ink-secondary" style={{ lineHeight: '28px', whiteSpace: 'pre-wrap' }}>
+          {activeTab === 'Product Info' ? (product.description || 'No description available.') : 'Information not available.'}
         </p>
       </section>
 
       {/* Reviews */}
       <section className="flex flex-col" style={{ gap: '16px' }}>
-        <h2
-          className="font-sans font-bold text-ink"
-          style={{ fontSize: '24px', lineHeight: '30px' }}
-        >
-          Reviews
-        </h2>
+        <h2 className="font-sans font-bold text-ink" style={{ fontSize: '24px', lineHeight: '30px' }}>Reviews</h2>
         {reviewsLoading ? (
           <div className="text-body2 text-ink-muted">Loading reviews…</div>
         ) : reviews.length === 0 ? (
-          <div className="rounded-card-sm border border-dashed border-line-strong bg-white p-8 text-center text-body1 text-ink-muted">
-            No reviews yet
-          </div>
+          <div className="rounded-card-sm border border-dashed border-line-strong bg-white p-8 text-center text-body1 text-ink-muted">No reviews yet</div>
         ) : (
-          <ul
-            className="flex flex-col"
-            style={{
-              gap: '16px',
-              listStyle: 'none',
-              padding: 0,
-              margin: 0,
-            }}
-          >
+          <ul className="flex flex-col" style={{ gap: '16px', listStyle: 'none', padding: 0, margin: 0 }}>
             {reviews.map((review, idx) => {
               const rating = getReviewRating(review);
               const name = getReviewerName(review);
               const text = getReviewText(review);
               const date = getReviewDate(review);
               return (
-                <li
-                  key={idx}
-                  className="rounded-card-sm border border-line bg-white p-5 flex flex-col"
-                  style={{ gap: '8px' }}
-                >
-                  <div
-                    className="flex items-center justify-between"
-                    style={{ gap: '12px' }}
-                  >
-                    <span className="font-semibold text-ink text-body1">
-                      {name}
-                    </span>
-                    {date && (
-                      <span className="text-body3 text-ink-muted">{date}</span>
-                    )}
+                <li key={idx} className="rounded-card-sm border border-line bg-white p-5 flex flex-col" style={{ gap: '8px' }}>
+                  <div className="flex items-center justify-between" style={{ gap: '12px' }}>
+                    <span className="font-semibold text-ink text-body1">{name}</span>
+                    {date && <span className="text-body3 text-ink-muted">{date}</span>}
                   </div>
                   <StarRow rating={rating} />
-                  {text && (
-                    <p
-                      className="text-body2 text-ink-secondary"
-                      style={{ lineHeight: '24px' }}
-                    >
-                      {text}
-                    </p>
-                  )}
+                  {text && <p className="text-body2 text-ink-secondary" style={{ lineHeight: '24px' }}>{text}</p>}
                 </li>
               );
             })}
@@ -604,35 +314,16 @@ export function ProductDetailPage() {
 
       {/* Related products */}
       <section className="flex flex-col" style={{ gap: '32px' }}>
-        <h2
-          className="font-sans"
-          style={{
-            fontSize: '32px',
-            fontWeight: 600,
-            color: '#6B6265',
-            lineHeight: '38px',
-          }}
-        >
-          Related Products
-        </h2>
+        <h2 className="font-sans" style={{ fontSize: '32px', fontWeight: 600, color: '#6B6265', lineHeight: '38px' }}>Related Products</h2>
         {relatedQuery.isLoading ? (
           <div className="grid grid-cols-2 lg:grid-cols-4" style={{ gap: '24px' }}>
-            {[0, 1, 2, 3].map((i) => (
-              <SkeletonCard key={i} />
-            ))}
+            {[0, 1, 2, 3].map((i) => <SkeletonCard key={i} />)}
           </div>
         ) : relatedProducts.length === 0 ? (
-          <div className="rounded-card-sm border border-dashed border-line-strong bg-white p-12 text-center text-body1 text-ink-muted">
-            No related products found.
-          </div>
+          <div className="rounded-card-sm border border-dashed border-line-strong bg-white p-12 text-center text-body1 text-ink-muted">No related products found.</div>
         ) : (
-          <div
-            className="grid grid-cols-2 lg:grid-cols-4"
-            style={{ gap: '24px' }}
-          >
-            {relatedProducts.map((p) => (
-              <ProductCard key={p._id} product={p} />
-            ))}
+          <div className="grid grid-cols-2 lg:grid-cols-4" style={{ gap: '24px' }}>
+            {relatedProducts.map((p) => <ProductCard key={p._id} product={p} />)}
           </div>
         )}
       </section>

@@ -15,19 +15,38 @@ const SORT_OPTIONS: { value: ProductsSort; label: string }[] = [
   { value: 'price_desc', label: 'Price: High to Low' },
 ];
 
-const FILTER_PILLS = ['All Product', 'Skin', 'Eyes', 'Cheeks', 'Eyebrows', 'Lips', 'Brushes', 'Offers'];
+// Dynamic filter pills per category
+const CATEGORY_PILLS: Record<string, string[]> = {
+  makeup: ['All Product', 'Skin', 'Eyes', 'Cheeks', 'Eyebrows', 'Lips', 'Brushes', 'Offers'],
+  skincare: ['All Product', 'Face Care', 'Body Care', 'Men Care', 'Sun Care'],
+  'korean-beauty': ['All Product', 'Skin', 'Sun', 'Offers'],
+};
 
-// Client-side filter keywords — match against product name (case-insensitive).
-// 'All Product' = no filter. 'Offers' = price < $100 (no discount field, use price as proxy).
-const FILTER_KEYWORDS: Record<string, string[] | null> = {
-  'All Product': null,
-  'Skin': ['foundation', 'filter', 'primer', 'cream', 'cleanser', 'sunscreen', 'toner', 'serum', 'moisturizer', 'lotion', 'corrector', 'wash', 'water', 'gel', 'spf', 'repair'],
-  'Eyes': ['mascara', 'eyeliner', 'eyeshadow', 'eye'],
-  'Cheeks': ['blush', 'bronzer', 'contour'],
-  'Eyebrows': ['brow'],
-  'Lips': ['lip', 'gloss', 'lipstick'],
-  'Brushes': ['brush'],
-  'Offers': null, // special: price < 100
+const CATEGORY_KEYWORDS: Record<string, Record<string, string[] | null>> = {
+  makeup: {
+    'All Product': null,
+    'Skin': ['foundation', 'filter', 'primer', 'cream', 'cleanser', 'sunscreen', 'toner', 'serum', 'moisturizer', 'lotion', 'corrector', 'wash', 'water', 'gel', 'spf', 'repair'],
+    'Eyes': ['mascara', 'eyeliner', 'eyeshadow', 'eye'],
+    'Cheeks': ['blush', 'bronzer', 'contour', 'highlighter', 'skinfinish'],
+    'Eyebrows': ['brow'],
+    'Lips': ['lip', 'gloss', 'lipstick'],
+    'Brushes': ['brush'],
+    'Offers': null,
+  },
+  skincare: {
+    'All Product': null,
+    'Face Care': ['cream', 'cleanser', 'serum', 'wash', 'toner', 'moisturizer', 'lotion', 'gel', 'foam', 'water', 'corrector', 'repair', 'effaclar', 'toleriane', 'lipikar', 'aquaporin', 'dermatoclean', 'urea', 'pigment', 'hydro', 'niacinamide', 'ceramide', 'hyalu', 'retinal', 'hydrance', 'balancium'],
+    'Body Care': ['body', 'hand'],
+    'Men Care': ['men', 'shave'],
+    'Sun Care': ['sun', 'spf', 'sunscreen', 'anthelios'],
+    'Offers': null,
+  },
+  'korean-beauty': {
+    'All Product': null,
+    'Skin': ['cream', 'cleanser', 'serum', 'wash', 'toner', 'moisturizer', 'lotion', 'gel', 'foam', 'water', 'essence', 'mucin', 'niacinamide', 'ceramide', 'heartleaf', 'relief', 'glow', 'red bean', 'snail', 'bha', 'blackhead', 'balancium', 'apricot'],
+    'Sun': ['sun', 'spf', 'sunscreen'],
+    'Offers': null,
+  },
 };
 
 export function BrandDetailPage() {
@@ -40,6 +59,10 @@ export function BrandDetailPage() {
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [activeFilter, setActiveFilter] = useState('All Product');
 
+  // Dynamic pills + keywords based on category
+  const filterPills = CATEGORY_PILLS[slug ?? 'makeup'] ?? CATEGORY_PILLS['makeup'];
+  const filterKeywords = CATEGORY_KEYWORDS[slug ?? 'makeup'] ?? CATEGORY_KEYWORDS['makeup'];
+
   const { data, isLoading, isFetching } = useProducts({
     search: brand?.searchTerm,
     sort,
@@ -50,13 +73,12 @@ export function BrandDetailPage() {
   const resultCount = data?.total ?? 0;
   const hasNextPage = data?.hasNextPage ?? false;
 
-  // Client-side filter: filter accumulated products by keyword match
   const filteredProducts = activeFilter === 'All Product'
     ? allProducts
     : activeFilter === 'Offers'
       ? allProducts.filter((p) => p.price < 100)
       : allProducts.filter((p) => {
-          const keywords = FILTER_KEYWORDS[activeFilter];
+          const keywords = filterKeywords[activeFilter];
           if (!keywords) return true;
           const nameLower = p.name.toLowerCase();
           return keywords.some((kw) => nameLower.includes(kw));
@@ -104,7 +126,6 @@ export function BrandDetailPage() {
 
   return (
     <div className="max-w-[1280px] mx-auto px-6 lg:px-20 py-10 flex flex-col" style={{ gap: '40px' }}>
-      {/* Breadcrumb: Home / Products / Category / Brand */}
       <nav className="flex items-center gap-2 text-body1" aria-label="Breadcrumb">
         <Link to="/" className="text-ink-secondary hover:text-ink">Home</Link>
         <span className="text-ink-muted">/</span>
@@ -115,10 +136,9 @@ export function BrandDetailPage() {
         <span className="text-ink font-medium">{brand.name}</span>
       </nav>
 
-      {/* Filter pills + result count + sort dropdown */}
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center flex-wrap gap-2">
-          {FILTER_PILLS.map((pill) => (
+          {filterPills.map((pill) => (
             <button
               key={pill}
               type="button"
@@ -153,7 +173,6 @@ export function BrandDetailPage() {
 
       <hr className="border-line" />
 
-      {/* Product grid */}
       {isFirstLoad ? (
         <div className="grid grid-cols-2 lg:grid-cols-4" style={{ gap: '24px' }}>
           {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => <SkeletonCard key={i} />)}
