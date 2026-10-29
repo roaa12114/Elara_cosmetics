@@ -17,6 +17,9 @@ import { DevShowcasePage } from "@pages/DevShowcasePage";
 import { BrandsPage } from "@features/customer/pages/BrandsPage";
 import { BrandDetailPage } from "@features/customer/pages/BrandDetailPage";
 import { ProductDetailPage } from "@features/customer/pages/ProductDetailPage";
+import { BundlesPage } from "@features/customer/pages/BundlesPage";
+import { BundleDetailPage } from "@features/customer/pages/BundleDetailPage";
+import { OffersPage } from "@features/customer/pages/OffersPage";
 
 export function AppRouter() {
   return (
@@ -76,6 +79,9 @@ export function AppRouter() {
           element={<BrandDetailPage />}
         />
         <Route path="/products/:id" element={<ProductDetailPage />} />
+        <Route path="/bundles" element={<BundlesPage />} />
+        <Route path="/bundles/:bundleSlug" element={<BundleDetailPage />} />
+        <Route path="/offers" element={<OffersPage />} />
       </Route>
 
       {/* Seller tree (dashboard only — auth routes are above under AuthLayout) */}

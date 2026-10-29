@@ -9,8 +9,8 @@ import { useCart } from "@shared/hooks/useCart";
 const navLinks = [
   { to: "/", label: "Home", status: "active" as const },
   { to: "/products", label: "Products", status: "pending" as const },
-  { to: "/bundles", label: "Bundles", status: "pending" as const },
-  { to: "/offers", label: "Offers", status: "pending" as const },
+  { to: "/bundles", label: "Bundles", status: "active" as const },
+  { to: "/offers", label: "Offers", status: "active" as const },
 ];
 
 const shopLinks = [
