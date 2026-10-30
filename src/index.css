@@ -24,6 +24,21 @@
   --color-gold: #f2c66d;
   --color-success: #2e7d5b;
 
+  /* Seller dashboard tokens (from Figma CSS) */
+  --color-ink-faint: #9c9295;
+  --color-card-border: #c3c6ca;
+  --color-success-text: #237a4b;
+  --color-warning-text: #8a5700;
+  --color-info-text: #175cd3;
+  --color-revenue-line: #c06478;
+  --color-chart-grid: #e4dde1;
+  --color-product-name: #202226;
+  --color-status-delivered-bg: rgba(162, 236, 213, 0.5);
+  --color-status-processing-bg: rgba(200, 198, 253, 0.5);
+  --color-status-pending-bg: rgba(236, 202, 162, 0.5);
+  --color-status-shipped-bg: rgba(253, 198, 198, 0.5);
+  --color-status-out-of-stock-bg: #f3eff0;
+
   --text-title: 64px;
   --text-title--line-height: 76px;
   --text-h4: 32px;

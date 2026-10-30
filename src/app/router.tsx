@@ -10,7 +10,16 @@ import { ConfirmEmailPage } from "@features/auth/pages/ConfirmEmailPage";
 import { SellerSignInPage } from "@features/seller/pages/SellerSignInPage";
 import { SellerSignUpPage } from "@features/seller/pages/SellerSignUpPage";
 import { HomePage } from "@features/customer/pages/HomePage";
-import { SellerDashboardPage } from "@features/seller/pages/SellerDashboardPage";
+import { SellerOverviewPage } from "@features/seller/pages/SellerOverviewPage";
+import { SalesAnalyticsPage } from "@features/seller/pages/SalesAnalyticsPage";
+import { SalesOverViewPage } from "@features/seller/pages/SalesOverViewPage";
+import { SellerProductsPage } from "@features/seller/pages/SellerProductsPage";
+import { SellerInventoryPage } from "@features/seller/pages/SellerInventoryPage";
+import { SellerOrdersPage } from "@features/seller/pages/SellerOrdersPage";
+import { SellerEarningsPage } from "@features/seller/pages/SellerEarningsPage";
+import { SellerPayoutsPage } from "@features/seller/pages/SellerPayoutsPage";
+import { SellerPromotionsPage } from "@features/seller/pages/SellerPromotionsPage";
+import { SellerSettingsPage } from "@features/seller/pages/SellerSettingsPage";
 import { AdminDashboardPage } from "@features/admin/pages/AdminDashboardPage";
 import { NotFoundPage } from "@pages/NotFoundPage";
 import { DevShowcasePage } from "@pages/DevShowcasePage";
@@ -20,18 +29,6 @@ import { ProductDetailPage } from "@features/customer/pages/ProductDetailPage";
 import { BundlesPage } from "@features/customer/pages/BundlesPage";
 import { BundleDetailPage } from "@features/customer/pages/BundleDetailPage";
 import { OffersPage } from "@features/customer/pages/OffersPage";
-import { CartPage } from "@features/customer/pages/CartPage";
-import { CheckoutPage } from "@features/customer/pages/CheckoutPage";
-import { AccountLayout } from "@layouts/AccountLayout";
-import { ProfilePage } from "@features/customer/pages/account/ProfilePage";
-import { AddressesPage } from "@features/customer/pages/account/AddressesPage";
-import { MyOrdersPage } from "@features/customer/pages/account/MyOrdersPage";
-import { OrderDetailPage } from "@features/customer/pages/account/OrderDetailPage";
-import { ReturnsPage } from "@features/customer/pages/account/ReturnsPage";
-import { WishlistPage } from "@features/customer/pages/account/WishlistPage";
-import { ManageCardsPage } from "@features/customer/pages/account/ManageCardsPage";
-import { NotificationsPage } from "@features/customer/pages/account/NotificationsPage";
-import { CancelItemsPage } from "@features/customer/pages/account/CancelItemsPage";
 
 export function AppRouter() {
   return (
@@ -94,22 +91,6 @@ export function AppRouter() {
         <Route path="/bundles" element={<BundlesPage />} />
         <Route path="/bundles/:bundleSlug" element={<BundleDetailPage />} />
         <Route path="/offers" element={<OffersPage />} />
-        <Route path="/cart" element={<CartPage />} />
-        <Route path="/checkout" element={<CheckoutPage />} />
-
-        {/* Customer account tree — all wrapped in AccountLayout (sidebar + breadcrumb) */}
-        <Route path="/account" element={<AccountLayout />}>
-          <Route index element={<MyOrdersPage />} />
-          <Route path="profile" element={<ProfilePage />} />
-          <Route path="addresses" element={<AddressesPage />} />
-          <Route path="orders" element={<MyOrdersPage />} />
-          <Route path="orders/:id" element={<OrderDetailPage />} />
-          <Route path="orders/:id/cancel" element={<CancelItemsPage />} />
-          <Route path="returns" element={<ReturnsPage />} />
-          <Route path="wishlist" element={<WishlistPage />} />
-          <Route path="cards" element={<ManageCardsPage />} />
-          <Route path="notifications" element={<NotificationsPage />} />
-        </Route>
       </Route>
 
       {/* Seller tree (dashboard only — auth routes are above under AuthLayout) */}
@@ -121,7 +102,16 @@ export function AppRouter() {
           </RequireRole>
         }
       >
-        <Route index element={<SellerDashboardPage />} />
+        <Route index element={<SellerOverviewPage />} />
+        <Route path="analytics" element={<SalesAnalyticsPage />} />
+        <Route path="sales" element={<SalesOverViewPage />} />
+        <Route path="products" element={<SellerProductsPage />} />
+        <Route path="inventory" element={<SellerInventoryPage />} />
+        <Route path="orders" element={<SellerOrdersPage />} />
+        <Route path="earnings" element={<SellerEarningsPage />} />
+        <Route path="payouts" element={<SellerPayoutsPage />} />
+        <Route path="promotions" element={<SellerPromotionsPage />} />
+        <Route path="settings" element={<SellerSettingsPage />} />
       </Route>
 
       {/* Admin tree */}
