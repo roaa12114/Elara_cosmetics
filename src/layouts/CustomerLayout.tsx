@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { Link, Outlet } from "react-router-dom";
-import { ShoppingCart, Heart, Search, ChevronDown } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Link, Outlet, useNavigate } from "react-router-dom";
+import { ShoppingCart, Heart, Search, ChevronDown, User, Package, Bell, LogOut } from "lucide-react";
 import { useAuth } from "@shared/lib/useAuth";
 import { useToast } from "@/shared/ui";
 import { useSubscribeNewsletter } from "@shared/hooks/useSubscribeNewsletter";
@@ -33,20 +33,45 @@ const customerCareLinks = [
 ];
 
 const myAccountLinks = [
-  { label: "Orders", to: null },
-  { label: "Wishlist", to: null },
-  { label: "Addresses", to: null },
+  { label: "Orders", to: "/account/orders" },
+  { label: "Wishlist", to: "/account/wishlist" },
+  { label: "Addresses", to: "/account/addresses" },
 ];
 
 const paymentMethods = ["Mastercard", "Visa", "Apple Pay", "OPay"];
 
 export function CustomerLayout() {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, signOut } = useAuth();
   const toast = useToast();
+  const navigate = useNavigate();
   const subscribe = useSubscribeNewsletter();
   const { data: cartData } = useCart();
   const cartCount = cartData?.cart?.itemsCount ?? 0;
   const [email, setEmail] = useState("");
+
+  // User menu dropdown state
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
+
+  // Close the dropdown when clicking outside of it
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
+        setIsUserMenuOpen(false);
+      }
+    }
+    if (isUserMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => document.removeEventListener("mousedown", handleClickOutside);
+    }
+  }, [isUserMenuOpen]);
+
+  function handleSignOut() {
+    signOut();
+    toast.show("Signed out successfully");
+    setIsUserMenuOpen(false);
+    navigate("/");
+  }
 
   function handleSubscribe(e: React.FormEvent) {
     e.preventDefault();
@@ -93,21 +118,108 @@ export function CustomerLayout() {
             </div>
           </div>
 
-          {/* Right side: Hi name / English */}
+          {/* Right side: Hi name dropdown / English */}
           <div className="flex items-center gap-4 text-body2">
             {isAuthenticated && user ? (
-              <span className="flex items-center gap-1 text-ink">
-                Hi, {user.name.split(" ")[0]}
-                <ChevronDown className="w-4 h-4" />
-              </span>
+              <div className="relative" ref={userMenuRef}>
+                {/* Toggle button */}
+                <button
+                  type="button"
+                  onClick={() => setIsUserMenuOpen((v) => !v)}
+                  className="flex items-center gap-1 text-ink hover:text-brand transition-colors"
+                  aria-expanded={isUserMenuOpen}
+                  aria-haspopup="menu"
+                >
+                  Hi, {user.name.split(" ")[0]}
+                  <ChevronDown
+                    className={`w-4 h-4 transition-transform ${isUserMenuOpen ? "rotate-180" : ""}`}
+                  />
+                </button>
+
+                {/* Dropdown menu */}
+                {isUserMenuOpen && (
+                  <div
+                    role="menu"
+                    className="absolute right-0 top-full mt-2 w-60 rounded-card-sm border border-line-strong bg-white shadow-brand py-2 z-50"
+                  >
+                    {/* User info header */}
+                    <div className="px-4 py-3 border-b border-line">
+                      <div className="text-body1 font-semibold text-ink truncate">
+                        {user.name}
+                      </div>
+                      <div className="text-body3 text-ink-muted truncate">
+                        {user.email}
+                      </div>
+                    </div>
+
+                    {/* Menu links */}
+                    <div className="py-1">
+                      <Link
+                        to="/account/profile"
+                        onClick={() => setIsUserMenuOpen(false)}
+                        className="flex items-center px-4 py-2 text-body2 text-ink hover:bg-primary-light transition-colors no-underline"
+                        style={{ gap: "10px" }}
+                        role="menuitem"
+                      >
+                        <User className="w-4 h-4 text-ink-muted" />
+                        Profile
+                      </Link>
+                      <Link
+                        to="/account/orders"
+                        onClick={() => setIsUserMenuOpen(false)}
+                        className="flex items-center px-4 py-2 text-body2 text-ink hover:bg-primary-light transition-colors no-underline"
+                        style={{ gap: "10px" }}
+                        role="menuitem"
+                      >
+                        <Package className="w-4 h-4 text-ink-muted" />
+                        My Orders
+                      </Link>
+                      <Link
+                        to="/account/wishlist"
+                        onClick={() => setIsUserMenuOpen(false)}
+                        className="flex items-center px-4 py-2 text-body2 text-ink hover:bg-primary-light transition-colors no-underline"
+                        style={{ gap: "10px" }}
+                        role="menuitem"
+                      >
+                        <Heart className="w-4 h-4 text-ink-muted" />
+                        Wishlist
+                      </Link>
+                      <Link
+                        to="/account/notifications"
+                        onClick={() => setIsUserMenuOpen(false)}
+                        className="flex items-center px-4 py-2 text-body2 text-ink hover:bg-primary-light transition-colors no-underline"
+                        style={{ gap: "10px" }}
+                        role="menuitem"
+                      >
+                        <Bell className="w-4 h-4 text-ink-muted" />
+                        Notifications
+                      </Link>
+                    </div>
+
+                    {/* Divider */}
+                    <div className="border-t border-line my-1" />
+
+                    {/* Sign out */}
+                    <button
+                      type="button"
+                      onClick={handleSignOut}
+                      className="flex items-center w-full px-4 py-2 text-body2 text-danger hover:bg-danger/5 transition-colors"
+                      style={{ gap: "10px" }}
+                      role="menuitem"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      Sign out
+                    </button>
+                  </div>
+                )}
+              </div>
             ) : (
-              <span
-                className="text-ink-muted cursor-not-allowed"
-                aria-disabled="true"
-                title="Sign in to see your account"
+              <Link
+                to="/sign-in"
+                className="text-ink hover:text-brand transition-colors no-underline"
               >
                 Login
-              </span>
+              </Link>
             )}
             <span
               className="text-ink-muted cursor-not-allowed"
@@ -146,12 +258,10 @@ export function CustomerLayout() {
             </div>
             {/* Right: cart, heart, My Order */}
             <div className="flex items-center gap-4">
-              <button
-                type="button"
-                disabled
+              <Link
+                to="/cart"
                 aria-label="Cart"
-                title="Cart page coming soon"
-                className="relative text-ink-muted hover:text-brand disabled:cursor-not-allowed disabled:opacity-60"
+                className="relative text-ink hover:text-brand transition-colors"
               >
                 <ShoppingCart className="w-5 h-5" />
                 {cartCount > 0 && (
@@ -159,23 +269,21 @@ export function CustomerLayout() {
                     {cartCount}
                   </span>
                 )}
-              </button>
-              <button
-                type="button"
-                disabled
+              </Link>
+              <Link
+                to="/account/wishlist"
                 aria-label="Wishlist"
-                title="Wishlist page coming soon"
-                className="text-ink-muted hover:text-brand disabled:cursor-not-allowed disabled:opacity-60"
+                className="text-ink hover:text-brand transition-colors"
               >
                 <Heart className="w-5 h-5" />
-              </button>
-              <span
-                className="text-ink-muted cursor-not-allowed"
-                aria-disabled="true"
-                title="My Orders page coming soon"
+              </Link>
+              <Link
+                to="/account/orders"
+                aria-label="My Orders"
+                className="text-ink hover:text-white transition-colors"
               >
                 My Order
-              </span>
+              </Link>
             </div>
           </div>
         </div>

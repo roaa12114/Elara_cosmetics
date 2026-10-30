@@ -17,9 +17,6 @@ type NavItem = {
   status: NavStatus;
 };
 
-// Per Q4: Customers/Sellers/Orders/Discounts/Categories/Content will be built in Phase 4
-// — for now they are pending (disabled, no Soon badge). Dashboard/Shipping/Analytics/
-// Settings have no backend — Soon badge (Rule #4).
 const navItems: NavItem[] = [
   { label: 'Dashboard', icon: LayoutDashboard, to: '#', end: true, status: 'soon' },
   { label: 'Customers', icon: Users, to: '/admin/customers', end: false, status: 'pending' },

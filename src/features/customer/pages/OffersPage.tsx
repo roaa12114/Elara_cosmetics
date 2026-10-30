@@ -48,13 +48,13 @@ export function OffersPage() {
 
   const displayCount = activeFilter === 'All Product' ? resultCount : filteredProducts.length;
 
-  /* eslint-disable react-hooks/set-state-in-effect */
+  
   useEffect(() => {
     if (!data) return;
     if (page === 1) { setAllProducts(data.products); }
     else { setAllProducts((prev) => { const ids = new Set(prev.map((p) => p._id)); return [...prev, ...data.products.filter((p) => !ids.has(p._id))]; }); }
   }, [data, page]);
-  /* eslint-enable react-hooks/set-state-in-effect */
+  
 
   function handleSortChange(newSort: ProductsSort) { setSort(newSort); setPage(1); setAllProducts([]); }
   function handleViewMore() { setPage((p) => p + 1); }

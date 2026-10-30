@@ -1,6 +1,4 @@
-// Used to remember the role of a user who just registered, so the shared
-// /confirm-email page can route them to the right sign-in page after success
-// (the confirm-email response itself contains no role — confirmed by user).
+
 
 const PENDING_ROLE_KEY = 'elara_pending_role';
 const PENDING_EMAIL_KEY = 'elara_pending_email';

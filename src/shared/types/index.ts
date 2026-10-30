@@ -1,9 +1,4 @@
-// All shapes below are typed from REAL API responses (Rule 6).
-// Do not edit unless a new real response has been pasted by the user.
-
-// ===== Auth types (Phase 1) =====
-
-export type Role = 'customer' | 'seller' | 'admin';
+export type Role = "customer" | "seller" | "admin";
 
 export interface Address {
   street: string;
@@ -58,8 +53,6 @@ export interface MeData {
 }
 export type MeResponse = ApiEnvelope<MeData>;
 
-// ===== Phase 2: Product + Category + Cart types =====
-
 export interface ProductSellerSummary {
   _id: string;
   name: string;
@@ -101,7 +94,6 @@ export interface ProductData {
   product: Product;
 }
 
-// Category — typed from GET /categories response
 export interface Category {
   _id: string;
   name: string;
@@ -122,7 +114,6 @@ export interface PaginatedCategoriesData {
   hasPreviousPage: boolean;
 }
 
-// Cart types
 export interface CartItemProduct {
   _id: string;
   name: string;
@@ -152,18 +143,107 @@ export interface CartData {
   cart: Cart;
 }
 
-// ===== Request shapes =====
+export interface ShippingAddress {
+  fullName: string;
+  phone: string;
+  street: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+}
 
-// Sort enum confirmed by hitting public endpoint — backend rejects other values
-// with: "Invalid enum value. Expected 'price_asc' | 'price_desc' | 'newest' | 'oldest'"
-export type ProductsSort = 'price_asc' | 'price_desc' | 'newest' | 'oldest';
+export interface OrderItem {
+  product: string;
+  seller: string;
+  name: string;
+  price: number;
+  quantity: number;
+}
+
+export type OrderStatus =
+  | "pending"
+  | "processing"
+  | "shipped"
+  | "delivered"
+  | "cancelled"
+  | "returned";
+
+export interface Order {
+  _id: string;
+  user: string;
+  orderNumber: string;
+  items: OrderItem[];
+  totalAmount: number;
+  shippingAddress: ShippingAddress;
+  status: OrderStatus;
+  createdAt: string;
+  updatedAt: string;
+  previewDiscount?: number;
+}
+
+export interface OrderData {
+  order: Order;
+}
+
+export interface PaginatedOrdersData {
+  orders: Order[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+}
+
+export interface CreateOrderRequest {
+  cartId: string;
+  shippingAddress: ShippingAddress;
+}
+
+export interface PromoSummary {
+  _id: string;
+  code: string;
+  discountType: "percentage" | "fixed";
+  discountValue: number;
+}
+
+export interface PromoValidationData {
+  promo: PromoSummary;
+  subtotal: number;
+  discount: number;
+  finalTotal: number;
+}
+
+export interface ValidatePromoRequest {
+  code: string;
+}
+
+export interface CheckoutPreviewData {
+  order: Order;
+}
+
+export interface CheckoutPreviewRequest {
+  orderId: string;
+  promoCode?: string;
+}
+
+export interface CheckoutData {
+  url: string;
+  [key: string]: unknown;
+}
+
+export interface CheckoutRequest {
+  orderId: string;
+}
+
+export type ProductsSort = "price_asc" | "price_desc" | "newest" | "oldest";
 
 export interface GetProductsParams {
   page?: number;
   limit?: number;
   search?: string;
   sort?: ProductsSort;
-  // TODO: confirm category + brand + price range filters with user when needed
 }
 
 export interface AddToCartRequest {
@@ -200,4 +280,43 @@ export interface ApiError {
   message: string;
   status: number;
   details?: unknown;
+}
+
+export interface Notification {
+  _id: string;
+  user_id: string;
+  type: string;
+  title: string;
+  content: string;
+  is_read: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface NotificationsData {
+  notifications: Notification[];
+}
+
+export interface WishlistItem {
+  _id: string;
+  seller: string;
+  name: string;
+  description: string;
+  price: number;
+  stock: number;
+  category: string;
+  images: string[];
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface WishlistData {
+  wishlist: WishlistItem[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
 }

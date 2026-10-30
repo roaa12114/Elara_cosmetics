@@ -15,7 +15,7 @@ const SORT_OPTIONS: { value: ProductsSort; label: string }[] = [
   { value: 'price_desc', label: 'Price: High to Low' },
 ];
 
-// Dynamic filter pills per category
+
 const CATEGORY_PILLS: Record<string, string[]> = {
   makeup: ['All Product', 'Skin', 'Eyes', 'Cheeks', 'Eyebrows', 'Lips', 'Brushes', 'Offers'],
   skincare: ['All Product', 'Face Care', 'Body Care', 'Men Care', 'Sun Care'],
@@ -59,7 +59,7 @@ export function BrandDetailPage() {
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [activeFilter, setActiveFilter] = useState('All Product');
 
-  // Dynamic pills + keywords based on category
+  
   const filterPills = CATEGORY_PILLS[slug ?? 'makeup'] ?? CATEGORY_PILLS['makeup'];
   const filterKeywords = CATEGORY_KEYWORDS[slug ?? 'makeup'] ?? CATEGORY_KEYWORDS['makeup'];
 
@@ -86,7 +86,7 @@ export function BrandDetailPage() {
 
   const displayCount = activeFilter === 'All Product' ? resultCount : filteredProducts.length;
 
-  /* eslint-disable react-hooks/set-state-in-effect */
+  
   useEffect(() => {
     if (!data) return;
     if (page === 1) {
@@ -99,7 +99,7 @@ export function BrandDetailPage() {
       });
     }
   }, [data, page]);
-  /* eslint-enable react-hooks/set-state-in-effect */
+  
 
   function handleSortChange(newSort: ProductsSort) {
     setSort(newSort);

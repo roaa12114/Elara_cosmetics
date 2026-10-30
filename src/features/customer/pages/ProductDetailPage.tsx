@@ -99,13 +99,13 @@ export function ProductDetailPage() {
   const reviews: Review[] = Array.isArray(reviewsQuery.data?.reviews) ? reviewsQuery.data!.reviews : [];
   const reviewsLoading = reviewsQuery.isLoading;
 
-  /* eslint-disable react-hooks/set-state-in-effect */
+  
   useEffect(() => {
     setSelectedImageIndex(0);
     setImageErrors({});
     setQuantity(1);
   }, [product?._id]);
-  /* eslint-enable react-hooks/set-state-in-effect */
+  
 
   const images = product?.images ?? [];
   const safeIndex = images.length === 0 ? 0 : Math.min(selectedImageIndex, images.length - 1);

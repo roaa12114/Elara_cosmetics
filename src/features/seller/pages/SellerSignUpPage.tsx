@@ -37,7 +37,7 @@ export function SellerSignUpPage() {
   });
 
   async function handleNext() {
-    // Validate only step 1 fields before advancing
+    
     const valid = await form.trigger(['name', 'email', 'phone', 'password']);
     if (valid) {
       setSubmitError(null);

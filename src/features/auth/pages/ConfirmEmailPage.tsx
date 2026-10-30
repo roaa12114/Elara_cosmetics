@@ -64,7 +64,7 @@ export function ConfirmEmailPage() {
     );
   }
 
-  // state === 'idle' | 'confirming' | 'error' — form is visible in all three
+  
   return (
     <AuthCard
       title="Check your email"

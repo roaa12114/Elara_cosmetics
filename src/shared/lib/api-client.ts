@@ -13,7 +13,6 @@ export const apiClient: AxiosInstance = axios.create({
   timeout: 30_000,
 });
 
-// Attach token to every request
 apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const token = localStorage.getItem('elara_access_token');
   if (token && config.headers) {
@@ -22,7 +21,6 @@ apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   return config;
 });
 
-// Unwrap 'data' envelope, reject on success === false, handle 401
 apiClient.interceptors.response.use(
   (response) => {
     const body = response.data as unknown;
@@ -74,7 +72,6 @@ apiClient.interceptors.response.use(
   }
 );
 
-// Typed helpers — response.data is already unwrapped by the interceptor
 export const api = {
   get: <T>(url: string, params?: Record<string, unknown>) =>
     apiClient.get<T>(url, { params }).then((r) => r.data),

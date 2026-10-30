@@ -3,9 +3,6 @@ import { Link } from 'react-router-dom';
 import type { Category } from '@shared/types';
 import { categorySlug } from '../data/brands';
 
-// Category card = just an image (user provides complete images).
-// Clicking the image navigates to the BrandsPage for that category
-// (e.g. "Makeup" → /brands/makeup, "Korean Beauty" → /brands/korean-beauty).
 export function CategoryCard({ category }: { category: Category }) {
   const [imageError, setImageError] = useState(false);
   const showImage = category.image && !imageError;

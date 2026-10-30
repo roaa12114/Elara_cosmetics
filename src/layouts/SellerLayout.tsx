@@ -17,9 +17,6 @@ type NavItem = {
   status: NavStatus;
 };
 
-// Overview route exists (/seller index → SellerDashboardPage). Products/Inventory/Orders
-// routes will be added in Phase 3 — for now they are pending (disabled, no Soon badge).
-// Earnings/Payouts/Promotions/Settings have no backend endpoints — Soon badge (Rule #4).
 const navItems: NavItem[] = [
   { label: 'Overview', icon: LayoutDashboard, to: '/seller', end: true, status: 'active' },
   { label: 'Products', icon: Package, to: '/seller/products', end: false, status: 'pending' },

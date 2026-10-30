@@ -1,4 +1,4 @@
-// Generic skeleton for any card-shaped loading state.
+
 export function SkeletonCard() {
   return (
     <div className="rounded-card border border-line bg-white overflow-hidden animate-pulse">

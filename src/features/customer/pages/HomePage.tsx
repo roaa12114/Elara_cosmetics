@@ -41,7 +41,7 @@ export function HomePage() {
   );
 }
 
-// === Section 1: Hero — gradient bg, Cormorant title, black 64px ===
+
 function HeroSection() {
   return (
     <section
@@ -62,7 +62,7 @@ function HeroSection() {
         src="/images/home/hero-right.png"
         alt=""
         className="absolute hidden lg:block object-contain"
-        style={{ width: "559px", height: "608px", right: "0", top: "1px" }}
+        style={{ width: "auto", height: "608px", right: "0", top: "1px" }}
       />
       <div
         className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center"
@@ -92,7 +92,7 @@ function HeroSection() {
   );
 }
 
-// === Section 2: Black Friday promo ===
+
 function BlackFridayPromo() {
   return (
     <section
@@ -138,7 +138,7 @@ function BlackFridayPromo() {
   );
 }
 
-// === Shared: Shop Now button (black pill) ===
+
 function ShopNowButton({ width, to }: { width: string; to: string }) {
   return (
     <Link
@@ -151,7 +151,7 @@ function ShopNowButton({ width, to }: { width: string; to: string }) {
   );
 }
 
-// === Section 3: Shop by Category ===
+
 function ShopByCategorySection({
   categories,
   isLoading,
@@ -198,13 +198,11 @@ function ShopByCategorySection({
           ))}
         </div>
       )}
-      {/* No "View All" — backend has no all-categories listing endpoint, and
-          only 3 categories exist so all of them are already shown above. */}
-    </section>
+     </section>
   );
 }
 
-// === Section 4: New & Noteworthy ===
+
 function NewAndNoteworthySection({
   products,
   isLoading,
@@ -239,14 +237,12 @@ function NewAndNoteworthySection({
           ))}
         </div>
       )}
-      {/* No standalone /products listing route yet — route the user to /offers
-          (the closest thing to a product listing we have). */}
-      <ViewAllButton to="/offers" />
+       <ViewAllButton to="/offers" />
     </section>
   );
 }
 
-// === Section 5: Bundle & Save (static decoration — no backend endpoint) ===
+
 const bundleCards = bundles.slice(0, 4).map((b) => ({
   slug: b.slug,
   name: b.name,
@@ -279,7 +275,7 @@ function BundleAndSaveSection() {
   );
 }
 
-// === Section 6: Brand Promos — 2 rows (2 top + 3 bottom) ===
+
 const brandPromos = [
   { name: "COSRX", discount: "50%", image: "/images/home/brands/cosrx.png", to: "/brands/korean-beauty/cosrx" },
   { name: "Charlotte Tilbury", discount: "50%", image: "/images/home/brands/charlotte-tilbury.png", to: "/brands/makeup/charlotte-tilbury" },
@@ -312,12 +308,11 @@ function BrandPromosSection() {
           <BrandPromoCard key={i} promo={b} />
         ))}
       </div>
-      {/* No "View All" — backend has no /brands listing endpoint. */}
     </section>
   );
 }
 
-// === Section 7: Best Deals for You ===
+
 const bestDealDecorations = [
   { tag: "Fragrance", rating: 4.5, priceMultiplier: 2.5 },
   { tag: "Fragrance", rating: 4.5, priceMultiplier: 2.5 },
@@ -373,7 +368,7 @@ function BestDealsSection({
   );
 }
 
-// === Static Bundle Card ===
+
 type BundleCardData = {
   slug: string;
   name: string;
@@ -516,7 +511,7 @@ function StaticBundleCard({
   );
 }
 
-// === Brand Promo Card ===
+
 function BrandPromoCard({
   promo,
 }: {
@@ -560,7 +555,7 @@ function BrandPromoCard({
   );
 }
 
-// === Shared: Section title ===
+
 function SectionTitle({ title }: { title: string }) {
   return (
     <div className="flex flex-col items-center" style={{ gap: "12px" }}>
@@ -575,7 +570,7 @@ function SectionTitle({ title }: { title: string }) {
   );
 }
 
-// === Shared: View All outline button ===
+
 function ViewAllButton({
   to,
   disabled,
@@ -611,7 +606,6 @@ function ViewAllButton({
   );
 }
 
-// === Shared: Empty state ===
 function EmptyState({ message }: { message: string }) {
   return (
     <div className="rounded-card-sm border border-dashed border-line-strong bg-white p-12 text-center text-body1 text-ink-muted">
