@@ -29,6 +29,13 @@ import { ProductDetailPage } from "@features/customer/pages/ProductDetailPage";
 import { BundlesPage } from "@features/customer/pages/BundlesPage";
 import { BundleDetailPage } from "@features/customer/pages/BundleDetailPage";
 import { OffersPage } from "@features/customer/pages/OffersPage";
+import { SellerAddProductPage } from "@features/seller/pages/SellerAddProductPage";
+import { SellerEditProductPage } from "@features/seller/pages/SellerEditProductPage";
+import { SellerProductDetailPage } from "@features/seller/pages/SellerProductDetailPage";
+import { SellerDiscountsPage } from "@features/seller/pages/SellerDiscountsPage";
+import { SellerDiscountDetailPage } from "@features/seller/pages/SellerDiscountDetailPage";
+import { SellerPromoCodesPage } from "@features/seller/pages/SellerPromoCodesPage";
+import { SellerPromoDetailPage } from "@features/seller/pages/SellerPromoDetailPage";
 
 export function AppRouter() {
   return (
@@ -112,6 +119,15 @@ export function AppRouter() {
         <Route path="payouts" element={<SellerPayoutsPage />} />
         <Route path="promotions" element={<SellerPromotionsPage />} />
         <Route path="settings" element={<SellerSettingsPage />} />
+        <Route path="products" element={<SellerProductsPage />} />
+        <Route path="products/new" element={<SellerAddProductPage />} />
+        <Route path="products/:id" element={<SellerProductDetailPage />} />
+        <Route path="products/:id/edit" element={<SellerEditProductPage />} />
+        <Route path="inventory" element={<SellerInventoryPage />} />
+        <Route path="discounts" element={<SellerDiscountsPage />} />
+        <Route path="discounts/:id" element={<SellerDiscountDetailPage />} />
+              <Route path="promo-codes" element={<SellerPromoCodesPage />} />
+        <Route path="promo-codes/:id" element={<SellerPromoDetailPage />} />
       </Route>
 
       {/* Admin tree */}

@@ -1,142 +1,246 @@
+import { useState } from 'react';
+import { User, Store, Bell, Camera, Trash2, Shield } from 'lucide-react';
+import { SellerNavbar } from '../components/SellerNavbar';
 import { useAuthMe } from '@shared/hooks/useAuthMe';
+import { useToast } from '@/shared/ui';
 import { formatDateTime } from '@shared/lib/utils';
-import { User, Mail, Phone, MapPin, Calendar, Store, ShieldCheck } from 'lucide-react';
+
+type Tab = 'profile' | 'store' | 'notifications';
 
 export function SellerSettingsPage() {
   const { data, isLoading } = useAuthMe();
+  const toast = useToast();
+  const [tab, setTab] = useState<Tab>('profile');
   const user = data?.user;
 
+  function handleSave() {
+    toast.show('Settings saved (demo mode — backend endpoint not available)');
+  }
+
   if (isLoading) {
-    return (
-      <div className="flex flex-col min-h-screen">
-        <header className="bg-white border-b border-line px-8 py-4">
-          <h1 className="font-sans font-bold text-ink" style={{ fontSize: '20px' }}>Settings</h1>
-        </header>
-        <div className="flex-1 p-8">
-          <div className="rounded-card-sm border border-line-strong bg-white p-8 animate-pulse">
-            <div className="h-6 w-48 bg-line rounded mb-6" />
-            <div className="grid grid-cols-2" style={{ gap: '24px' }}>
-              {[0, 1, 2, 3].map((i) => (
-                <div key={i} className="h-20 bg-line rounded-card-sm" />
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return (<div className="flex flex-col min-h-screen"><SellerNavbar /><div className="flex-1 flex items-center justify-center"><p className="text-ink-faint">Loading...</p></div></div>);
   }
-
-  if (!user) {
-    return (
-      <div className="flex flex-col min-h-screen">
-        <header className="bg-white border-b border-line px-8 py-4">
-          <h1 className="font-sans font-bold text-ink" style={{ fontSize: '20px' }}>Settings</h1>
-        </header>
-        <div className="flex-1 p-8">
-          <div className="rounded-card-sm border border-line-strong bg-white p-8 text-center text-ink-muted">
-            Could not load your profile. Please try again.
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  const address = user.address;
 
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Top bar */}
-      <header className="bg-white border-b border-line px-8 py-4">
-        <h1 className="font-sans font-bold text-ink" style={{ fontSize: '20px' }}>Settings</h1>
-        <p className="text-body3 text-ink-muted mt-1">Manage your seller account information</p>
-      </header>
+      <SellerNavbar />
+      <div className="flex flex-col" style={{ padding: '32px', gap: '24px', maxWidth: '900px' }}>
+        <h1 className="font-bold text-ink" style={{ fontSize: '20px' }}>Settings</h1>
 
-      {/* Content */}
-      <div className="flex-1 p-8 flex flex-col" style={{ gap: '24px' }}>
-        {/* Store info header */}
-        <div className="rounded-card-sm border border-line-strong bg-white p-6 flex items-center justify-between">
-          <div className="flex items-center" style={{ gap: '16px' }}>
-            <div className="rounded-full bg-primary text-brand font-bold w-16 h-16 flex items-center justify-center text-h4">
-              {user.name.split(' ').slice(0, 2).map((s) => s[0]?.toUpperCase()).join('')}
-            </div>
-            <div>
-              <h2 className="font-sans font-bold text-ink" style={{ fontSize: '20px' }}>{user.name}</h2>
-              <p className="text-body2 text-ink-muted">Seller Account · Owner</p>
-            </div>
-          </div>
-          <div className="rounded-pill bg-success/20 text-success px-3 py-1 text-body3 font-medium flex items-center" style={{ gap: '6px' }}>
-            <ShieldCheck className="w-4 h-4" />
-            Verified Seller
-          </div>
+        {/* Tabs */}
+        <div className="flex items-center border-b border-line">
+          {[
+            { id: 'profile' as Tab, label: 'Edit Profile', icon: User },
+            { id: 'store' as Tab, label: 'Store Settings', icon: Store },
+            { id: 'notifications' as Tab, label: 'Notifications', icon: Bell },
+          ].map((t) => {
+            const Icon = t.icon;
+            return (
+              <button key={t.id} onClick={() => setTab(t.id)}
+                className={tab === t.id ? 'text-ink' : 'text-ink-faint'}
+                style={{ padding: '12px 20px', fontSize: '16px', fontWeight: 500, borderBottom: tab === t.id ? '2px solid var(--color-ink)' : '2px solid transparent', marginBottom: '-1px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Icon className="w-4 h-4" /> {t.label}
+              </button>
+            );
+          })}
         </div>
 
-        {/* Personal info section */}
-        <section className="rounded-card-sm border border-line-strong bg-white p-6 flex flex-col" style={{ gap: '20px' }}>
-          <h3 className="font-sans font-semibold text-ink" style={{ fontSize: '18px' }}>Personal Information</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: '20px' }}>
-            <InfoRow icon={User} label="Full Name" value={user.name} />
-            <InfoRow icon={Mail} label="Email" value={user.email} />
-            <InfoRow icon={Phone} label="Phone" value={user.phone || '—'} />
-            <InfoRow icon={Calendar} label="Member Since" value={formatDateTime(user.createdAt)} />
-          </div>
-        </section>
-
-        {/* Store details */}
-        <section className="rounded-card-sm border border-line-strong bg-white p-6 flex flex-col" style={{ gap: '20px' }}>
-          <h3 className="font-sans font-semibold text-ink" style={{ fontSize: '18px' }}>Store Details</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: '20px' }}>
-            <InfoRow icon={Store} label="Store Name" value={user.name} />
-            <InfoRow icon={ShieldCheck} label="Verification" value="Verified" />
-          </div>
-        </section>
-
-        {/* Address */}
-        <section className="rounded-card-sm border border-line-strong bg-white p-6 flex flex-col" style={{ gap: '20px' }}>
-          <h3 className="font-sans font-semibold text-ink" style={{ fontSize: '18px' }}>Business Address</h3>
-          {address && (address.street || address.city) ? (
-            <div className="flex items-start" style={{ gap: '12px' }}>
-              <MapPin className="w-5 h-5 text-brand mt-0.5" />
-              <div className="flex flex-col" style={{ gap: '2px' }}>
-                <span className="text-body1 text-ink">{address.street || '—'}</span>
-                <span className="text-body2 text-ink-secondary">
-                  {[address.city, address.state, address.postalCode].filter(Boolean).join(', ') || '—'}
-                </span>
-                <span className="text-body2 text-ink-secondary">{address.country || '—'}</span>
+        {/* === Edit Profile Tab === */}
+        {tab === 'profile' && (
+          <div className="flex flex-col" style={{ gap: '24px' }}>
+            <Section title="Profile Photo" subtitle="JPG or PNG. Minimum 200×200px recommended.">
+              <div className="flex items-center" style={{ gap: '16px' }}>
+                <div className="rounded-full bg-primary text-brand font-bold flex items-center justify-center" style={{ width: '80px', height: '80px', fontSize: '28px' }}>
+                  {user?.name?.split(' ').slice(0, 2).map((s) => s[0]?.toUpperCase()).join('') ?? '?'}
+                </div>
+                <div className="flex items-center" style={{ gap: '8px' }}>
+                  <button className="flex items-center bg-ink text-white" style={{ borderRadius: 'var(--radius-pill)', padding: '8px 16px', gap: '6px', fontSize: '14px', fontWeight: 500 }}><Camera className="w-4 h-4" /> Change Photo</button>
+                  <button className="flex items-center text-danger-dark" style={{ border: '1px solid var(--color-danger-dark)', borderRadius: 'var(--radius-pill)', padding: '8px 16px', gap: '6px', fontSize: '14px', fontWeight: 500 }}><Trash2 className="w-4 h-4" /> Remove</button>
+                </div>
               </div>
-            </div>
-          ) : (
-            <p className="text-body2 text-ink-muted">No business address on file.</p>
-          )}
-        </section>
+            </Section>
 
-        {/* Read-only notice */}
-        <div className="rounded-card-sm border border-line-strong bg-primary-light/30 p-4 text-body2 text-ink-secondary text-center">
-          Profile editing is currently unavailable. To update your store name, email, or phone,
-          please contact Elara support.
+            <Section title="Personal Information">
+              <div className="grid grid-cols-2" style={{ gap: '16px' }}>
+                <Field label="Full Name" defaultValue={user?.name ?? ''} />
+                <Field label="Email" defaultValue={user?.email ?? ''} />
+                <Field label="Phone" defaultValue={user?.phone ?? ''} />
+                <Field label="Member Since" defaultValue={user ? formatDateTime(user.createdAt) : ''} readOnly />
+              </div>
+            </Section>
+
+            <Section title="Account Security & Password">
+              <div className="flex flex-col" style={{ gap: '16px' }}>
+                <div className="grid grid-cols-2" style={{ gap: '16px' }}>
+                  <Field label="Current Password" type="password" placeholder="••••••••" />
+                  <div />
+                  <Field label="New Password" type="password" placeholder="••••••••" />
+                  <Field label="Confirm Password" type="password" placeholder="••••••••" />
+                </div>
+                <div className="flex items-center bg-surface" style={{ borderRadius: '8px', padding: '16px', gap: '12px' }}>
+                  <Shield className="w-5 h-5 text-ink-faint" />
+                  <div>
+                    <span className="text-ink font-medium" style={{ fontSize: '14px' }}>Two-Factor Authentication (2FA)</span>
+                    <p className="text-ink-faint" style={{ fontSize: '12px' }}>Not activated. Add an extra layer of security to your account.</p>
+                  </div>
+                  <button className="ml-auto text-brand" style={{ fontSize: '14px', fontWeight: 500 }}>Enable</button>
+                </div>
+              </div>
+            </Section>
+          </div>
+        )}
+
+        {/* === Store Settings Tab === */}
+        {tab === 'store' && (
+          <div className="flex flex-col" style={{ gap: '24px' }}>
+            <Section title="Store Status">
+              <div className="flex items-center" style={{ gap: '12px' }}>
+                <Toggle defaultOn label="Store is Open" />
+                <span className="text-ink-faint" style={{ fontSize: '14px' }}>Customers can browse and place orders</span>
+              </div>
+            </Section>
+            <Section title="Order Settings">
+              <div className="flex flex-col" style={{ gap: '16px' }}>
+                <div className="flex items-center" style={{ gap: '12px' }}><Toggle defaultOn label="Accept Orders" /></div>
+                <div>
+                  <label className="text-ink-secondary" style={{ fontSize: '14px', marginBottom: '6px', display: 'block' }}>Minimum Order Amount</label>
+                  <input type="number" defaultValue="40" className="bg-white text-ink" style={{ border: '1px solid var(--color-line)', borderRadius: '8px', padding: '12px', fontSize: '14px', height: '40px', width: '200px' }} />
+                </div>
+              </div>
+            </Section>
+            <Section title="Inventory & Alerts">
+              <div className="flex flex-col" style={{ gap: '16px' }}>
+                <div className="flex items-center" style={{ gap: '12px' }}><Toggle defaultOn label="Low Stock Alert" /></div>
+                <div>
+                  <label className="text-ink-secondary" style={{ fontSize: '14px', marginBottom: '6px', display: 'block' }}>Low Stock Threshold</label>
+                  <input type="number" defaultValue="10" className="bg-white text-ink" style={{ border: '1px solid var(--color-line)', borderRadius: '8px', padding: '12px', fontSize: '14px', height: '40px', width: '120px' }} />
+                </div>
+              </div>
+            </Section>
+            <Section title="Business Hours">
+              <div className="flex flex-col" style={{ gap: '12px' }}>
+                {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day) => (
+                  <div key={day} className="flex items-center justify-between" style={{ padding: '8px 0' }}>
+                    <span className="text-ink" style={{ fontSize: '14px', width: '100px' }}>{day}</span>
+                    {day === 'Friday' ? (
+                      <span className="text-danger-dark" style={{ fontSize: '14px' }}>Closed all day</span>
+                    ) : (
+                      <div className="flex items-center" style={{ gap: '8px' }}>
+                        <input type="time" defaultValue="09:00" className="bg-white text-ink" style={{ border: '1px solid var(--color-line)', borderRadius: '8px', padding: '6px 12px', fontSize: '14px' }} />
+                        <span className="text-ink-faint">to</span>
+                        <input type="time" defaultValue="18:00" className="bg-white text-ink" style={{ border: '1px solid var(--color-line)', borderRadius: '8px', padding: '6px 12px', fontSize: '14px' }} />
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </Section>
+            <Section title="Currency">
+              <select className="bg-white text-ink" style={{ border: '1px solid var(--color-line)', borderRadius: '8px', padding: '12px', fontSize: '14px', height: '40px', width: '300px' }}>
+                <option>USD ($) - US Dollar</option><option>EUR (€) - Euro</option><option>GBP (£) - British Pound</option><option>EGP (£E) - Egyptian Pound</option>
+              </select>
+            </Section>
+          </div>
+        )}
+
+        {/* === Notifications Tab === */}
+        {tab === 'notifications' && (
+          <div className="flex flex-col" style={{ gap: '24px' }}>
+            <Section title="Order Notifications">
+              <div className="flex flex-col" style={{ gap: '12px' }}>
+                {['New Order', 'Order Cancellation', 'Order Status Update', 'Payment Notifications'].map((label) => (
+                  <div key={label} className="flex items-center justify-between" style={{ padding: '8px 0' }}>
+                    <span className="text-ink" style={{ fontSize: '14px' }}>{label}</span>
+                    <div className="flex items-center" style={{ gap: '16px' }}>
+                      <span className="text-ink-faint" style={{ fontSize: '12px' }}>Email</span><Toggle defaultOn small />
+                      <span className="text-ink-faint" style={{ fontSize: '12px' }}>Push</span><Toggle defaultOn small />
+                    </div>
+                  </div>
+                ))}
+                <div className="flex items-center justify-between" style={{ padding: '8px 0' }}>
+                  <span className="text-ink" style={{ fontSize: '14px' }}>System Alerts</span>
+                  <div className="flex items-center" style={{ gap: '16px' }}>
+                    <span className="text-brand" style={{ fontSize: '12px' }}>Email</span><Toggle defaultOn small pink />
+                    <span className="text-brand" style={{ fontSize: '12px' }}>Push</span><Toggle defaultOn small pink />
+                  </div>
+                </div>
+              </div>
+            </Section>
+            <Section title="Inventory Notifications">
+              <div className="flex flex-col" style={{ gap: '12px' }}>
+                {['Low Stock Alert', 'Out of Stock Alert'].map((label) => (
+                  <div key={label} className="flex items-center justify-between" style={{ padding: '8px 0' }}><span className="text-ink" style={{ fontSize: '14px' }}>{label}</span><Toggle defaultOn /></div>
+                ))}
+              </div>
+            </Section>
+            <Section title="Customer & Store Notifications">
+              <div className="flex flex-col" style={{ gap: '12px' }}>
+                {['New Customer Registration', 'New Review'].map((label) => (
+                  <div key={label} className="flex items-center justify-between" style={{ padding: '8px 0' }}><span className="text-ink" style={{ fontSize: '14px' }}>{label}</span><Toggle defaultOn /></div>
+                ))}
+              </div>
+            </Section>
+            <Section title="Marketing Announcements">
+              <div className="flex flex-col" style={{ gap: '12px' }}>
+                {['Promo Updates', 'Platform Announcements'].map((label) => (
+                  <div key={label} className="flex items-center justify-between" style={{ padding: '8px 0' }}><span className="text-ink" style={{ fontSize: '14px' }}>{label}</span><Toggle /></div>
+                ))}
+              </div>
+            </Section>
+            <Section title="Notification Frequency">
+              <div className="flex flex-col" style={{ gap: '12px' }}>
+                <div className="flex items-center" style={{ gap: '12px' }}>
+                  {['Instant', 'Daily', 'Weekly'].map((freq, i) => (
+                    <button key={freq} className={i === 0 ? 'bg-ink text-white' : 'text-ink-secondary'} style={{ borderRadius: 'var(--radius-pill)', padding: '8px 20px', fontSize: '14px', fontWeight: 500, border: i === 0 ? 'none' : '1px solid var(--color-line)' }}>{freq}</button>
+                  ))}
+                </div>
+                <p className="text-ink-faint" style={{ fontSize: '12px' }}>Security & payment alerts are always sent instantly.</p>
+              </div>
+            </Section>
+          </div>
+        )}
+
+        {/* Actions */}
+        <div className="flex items-center justify-end" style={{ gap: '12px', paddingTop: '16px', borderTop: '1px solid var(--color-line)' }}>
+          <button className="text-ink-secondary" style={{ fontSize: '16px', fontWeight: 500, padding: '8px 16px' }}>Cancel</button>
+          <button onClick={handleSave} className="bg-ink text-white" style={{ borderRadius: 'var(--radius-pill)', padding: '8px 24px', fontSize: '16px', fontWeight: 500, height: '48px' }}>Save Changes</button>
         </div>
       </div>
     </div>
   );
 }
 
-function InfoRow({
-  icon: Icon,
-  label,
-  value,
-}: {
-  icon: typeof User;
-  label: string;
-  value: string;
+function Section({ title, subtitle, children }: { title: string; subtitle?: string; children: React.ReactNode }) {
+  return (
+    <div className="bg-white" style={{ border: '1px solid var(--color-line)', borderRadius: '8px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div><h3 className="font-bold text-ink" style={{ fontSize: '16px' }}>{title}</h3>{subtitle && <p className="text-ink-faint" style={{ fontSize: '12px', marginTop: '4px' }}>{subtitle}</p>}</div>
+      {children}
+    </div>
+  );
+}
+
+function Field({ label, defaultValue, type, placeholder, readOnly }: {
+  label: string; defaultValue?: string; type?: string; placeholder?: string; readOnly?: boolean;
 }) {
   return (
-    <div className="flex items-start" style={{ gap: '12px' }}>
-      <div className="rounded-card-sm bg-primary-light w-10 h-10 flex items-center justify-center shrink-0">
-        <Icon className="w-5 h-5 text-brand" />
-      </div>
-      <div className="flex flex-col min-w-0" style={{ gap: '2px' }}>
-        <span className="text-body3 text-ink-muted uppercase tracking-wide">{label}</span>
-        <span className="text-body1 text-ink break-words">{value}</span>
-      </div>
+    <div className="flex flex-col" style={{ gap: '6px' }}>
+      <label className="text-ink-secondary" style={{ fontSize: '14px' }}>{label}</label>
+      <input type={type ?? 'text'} defaultValue={defaultValue} placeholder={placeholder} readOnly={readOnly}
+        className="w-full bg-white text-ink" style={{ border: '1px solid var(--color-line)', borderRadius: '8px', padding: '12px', fontSize: '14px', height: '40px', opacity: readOnly ? 0.7 : 1 }} />
     </div>
+  );
+}
+
+function Toggle({ defaultOn, label, small, pink }: { defaultOn?: boolean; label?: string; small?: boolean; pink?: boolean }) {
+  const [on, setOn] = useState(!!defaultOn);
+  const w = small ? '36px' : '48px';
+  const h = small ? '20px' : '26px';
+  return (
+    <button type="button" onClick={() => setOn(!on)} className="flex items-center" style={{ gap: label ? '8px' : '0' }}>
+      {label && <span className="text-ink" style={{ fontSize: '14px' }}>{label}</span>}
+      <div style={{ width: w, height: h, borderRadius: h, background: on ? (pink ? 'var(--color-brand)' : 'var(--color-ink)') : 'var(--color-line)', position: 'relative', transition: 'background 0.2s' }}>
+        <div style={{ position: 'absolute', top: '2px', left: on ? `calc(100% - ${small ? '16px' : '22px'})` : '2px', width: small ? '16px' : '22px', height: small ? '16px' : '22px', borderRadius: '50%', background: 'white', transition: 'left 0.2s' }} />
+      </div>
+    </button>
   );
 }

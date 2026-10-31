@@ -320,3 +320,21 @@ export interface WishlistData {
   hasNextPage: boolean;
   hasPreviousPage: boolean;
 }
+
+export interface CreateProductRequest {
+  name: string;
+  description: string;
+  price: number;
+  stock: number;
+  category: string;
+  images: string[];
+}
+
+export interface UpdateProductRequest {
+  name?: string;
+  description?: string;
+  price?: number;
+  stock?: number;
+  category?: string;
+  images?: string[];
+}
