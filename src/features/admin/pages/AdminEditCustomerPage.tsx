@@ -1,0 +1,62 @@
+import { Link, useParams } from 'react-router-dom';
+import { ArrowLeft, Camera } from 'lucide-react';
+import { AdminNavbar } from '../components/AdminNavbar';
+import { useAdminUsers } from '@shared/hooks/useAdminUsers';
+import { useToast } from '@/shared/ui';
+
+export function AdminEditCustomerPage() {
+  const { id } = useParams();
+  const toast = useToast();
+  const { data, isLoading } = useAdminUsers({ role: 'customer', limit: 100 });
+  const user = data?.users?.find((u) => u._id === id);
+
+  if (isLoading) return (<div className="flex flex-col min-h-screen"><AdminNavbar /><div className="flex-1 flex items-center justify-center"><p className="text-ink-faint">Loading...</p></div></div>);
+  if (!user) return (<div className="flex flex-col min-h-screen"><AdminNavbar /><div className="flex-1 flex items-center justify-center"><p className="text-ink">Customer not found</p></div></div>);
+
+  return (
+    <div className="flex flex-col min-h-screen">
+      <AdminNavbar />
+      <div className="flex flex-col" style={{ padding: '32px', gap: '24px', maxWidth: '800px' }}>
+        <Link to={`/admin/customers/${user._id}`} className="flex items-center text-ink-secondary hover:text-ink no-underline" style={{ gap: '8px', fontSize: '16px' }}><ArrowLeft className="w-5 h-5" /> Back to Customer</Link>
+        <h1 className="font-bold text-ink" style={{ fontSize: '20px' }}>Edit Customer Profile</h1>
+
+        <div className="bg-white" style={{ border: '1px solid var(--color-line)', borderRadius: '8px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <div className="flex items-center" style={{ gap: '16px' }}>
+            <div className="rounded-full bg-primary text-brand font-bold flex items-center justify-center" style={{ width: '80px', height: '80px', fontSize: '28px' }}>{user.name.split(' ').slice(0, 2).map((s) => s[0]?.toUpperCase()).join('')}</div>
+            <div><p className="text-ink" style={{ fontSize: '14px' }}>Profile Photo</p><p className="text-ink-faint" style={{ fontSize: '12px' }}>JPG or PNG. Recommended 400×400px</p><button className="flex items-center bg-ink text-white mt-2" style={{ borderRadius: 'var(--radius-pill)', padding: '6px 12px', gap: '6px', fontSize: '12px' }}><Camera className="w-3 h-3" /> Change Photo</button></div>
+          </div>
+          <div className="grid grid-cols-2" style={{ gap: '16px' }}>
+            <Field label="Name" defaultValue={user.name} />
+            <Field label="Email" defaultValue={user.email} />
+            <Field label="Phone" defaultValue={user.phone || ''} />
+            <div>
+              <label className="text-ink-secondary" style={{ fontSize: '14px', marginBottom: '6px', display: 'block' }}>Status</label>
+              <span className="inline-flex items-center" style={{ background: 'var(--color-status-delivered-bg)', color: 'var(--color-success-text)', borderRadius: '6px', padding: '8px 16px', fontSize: '14px', fontWeight: 500 }}>{user.isActive ? 'Active' : 'Blocked'}</span>
+            </div>
+          </div>
+          <div className="grid grid-cols-2" style={{ gap: '16px' }}>
+            <Field label="Street Address" defaultValue={user.address?.street || ''} />
+            <Field label="City" defaultValue={user.address?.city || ''} />
+            <Field label="State" defaultValue={user.address?.state || ''} />
+            <Field label="ZIP Code" defaultValue={user.address?.postalCode || ''} />
+          </div>
+          <Field label="Country" defaultValue={user.address?.country || ''} />
+        </div>
+
+        <div className="flex items-center justify-end" style={{ gap: '12px' }}>
+          <Link to={`/admin/customers/${user._id}`} className="text-ink-secondary no-underline" style={{ fontSize: '16px', fontWeight: 500, padding: '8px 16px' }}>Cancel</Link>
+          <button onClick={() => toast.show('Profile editing is in demo mode — no PATCH endpoint available')} className="bg-ink text-white" style={{ borderRadius: 'var(--radius-pill)', padding: '8px 24px', fontSize: '16px', fontWeight: 500, height: '48px' }}>Save Changes</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Field({ label, defaultValue }: { label: string; defaultValue?: string }) {
+  return (
+    <div className="flex flex-col" style={{ gap: '6px' }}>
+      <label className="text-ink-secondary" style={{ fontSize: '14px' }}>{label}</label>
+      <input type="text" defaultValue={defaultValue} className="w-full bg-white text-ink" style={{ border: '1px solid var(--color-line)', borderRadius: '8px', padding: '12px', fontSize: '14px', height: '40px' }} />
+    </div>
+  );
+}
