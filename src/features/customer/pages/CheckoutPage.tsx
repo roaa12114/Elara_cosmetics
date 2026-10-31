@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { CreditCard, Truck, ShieldCheck, ArrowRight, Lock } from 'lucide-react';
+import { CreditCard, Truck, ShieldCheck, Lock } from 'lucide-react';
 import { useCart } from '@shared/hooks/useCart';
 import { useOrders } from '@shared/hooks/useOrders';
 import { useCreateOrder } from '@shared/hooks/useCreateOrder';

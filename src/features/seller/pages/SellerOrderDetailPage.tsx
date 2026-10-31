@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ArrowLeft, CheckCircle2, Package, Truck, Home, Clock } from 'lucide-react';
 import { SellerNavbar } from '../components/SellerNavbar';
 import { sellerOrderDetail } from '../data/sellerStaticData';

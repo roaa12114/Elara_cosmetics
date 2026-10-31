@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Trash2, Printer, Ticket } from 'lucide-react';
 import { SellerNavbar } from '../components/SellerNavbar';
 import { promoCodeDetail } from '../data/sellerStaticData';

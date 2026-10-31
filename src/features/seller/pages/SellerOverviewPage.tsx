@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { TrendingUp, TrendingDown, Plus } from 'lucide-react';
+import {  Plus } from 'lucide-react';
 import { SellerNavbar } from '../components/SellerNavbar';
 import { SellerOverviewTabs } from '../components/SellerOverviewTabs';
 import {

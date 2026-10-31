@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {  Trash2, Printer, Tag } from 'lucide-react';
 import { SellerNavbar } from '../components/SellerNavbar';
 import { discountDetail } from '../data/sellerStaticData';
@@ -9,7 +9,6 @@ const STATUS_STYLES: Record<string, { bg: string; text: string }> = {
 };
 
 export function SellerDiscountDetailPage() {
-  const { id } = useParams();
   const d = discountDetail;
   const st = STATUS_STYLES[d.status] ?? { bg: 'var(--color-status-out-of-stock-bg)', text: '#171315' };
 
