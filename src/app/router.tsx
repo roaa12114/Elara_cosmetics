@@ -87,7 +87,7 @@ export function AppRouter() {
     <Routes>
       <Route path="/dev" element={<DevShowcasePage />} />
 
-      {/* Auth routes — public-only, share AuthLayout (header + footer) */}
+      {/* Auth routes */}
       <Route element={<AuthLayout />}>
         <Route
           path="/sign-in"
@@ -145,7 +145,7 @@ export function AppRouter() {
         <Route path="/offers" element={<OffersPage />} />
       </Route>
 
-      {/* Seller tree (dashboard only — auth routes are above under AuthLayout) */}
+      {/* Seller routes */}
       <Route
         path="/seller"
         element={
@@ -214,7 +214,7 @@ export function AppRouter() {
           path="customers/:id/orders/:orderId"
           element={<AdminOrderDetailPage />}
         />
-        {/*Seller*/}
+        {/* Seller routes */}
         <Route path="sellers" element={<AdminSellerListPage />} />
         <Route path="sellers/new" element={<AdminAddSellerPage />} />
         <Route path="sellers/:id" element={<AdminSellerDetailPage />} />
@@ -249,7 +249,7 @@ export function AppRouter() {
           path="sellers/:id/unblocked"
           element={<AdminSellerUnblockedSuccessPage />}
         />
-        {/* category*/}
+        {/* Category routes */}
         <Route path="categories" element={<AdminCategoryListPage />} />
         <Route path="categories/new" element={<AdminAddCategoryPage />} />
         <Route path="categories/:id/edit" element={<AdminEditCategoryPage />} />
@@ -257,14 +257,14 @@ export function AppRouter() {
           path="categories/:id/subcategories"
           element={<AdminCategorySubcategoriesPage />}
         />
-        {/* Order  */}
+        {/* Order routes */}
         <Route path="orders" element={<AdminOrderListPage />} />
         <Route path="orders/:orderId" element={<AdminOrderDetailPage />} />
         <Route
           path="orders/:orderId/status"
           element={<AdminOrderUpdateStatusPage />}
         />
-        {/* Discount  */}
+        {/* Discount routes */}
         <Route path="discounts" element={<AdminDiscountListPage />} />
         <Route path="discounts/new" element={<AdminCreateDiscountPage />} />
         <Route

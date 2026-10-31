@@ -132,7 +132,7 @@ export function AdminCustomerListPage() {
             <p className="text-ink" style={{ fontSize: '18px', fontWeight: 600 }}>No customers found</p>
             <p className="text-ink-faint" style={{ fontSize: '14px', marginTop: '8px' }}>
               {filter === 'Blocked'
-                ? 'No blocked customers in the database. The backend has no block-user endpoint yet.'
+                ? 'No blocked customers in the database. This feature is not available yet.'
                 : search.trim()
                 ? `No customers match "${search.trim()}".`
                 : 'Try adjusting your filters.'}

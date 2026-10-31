@@ -99,7 +99,7 @@ export function SellerPromotionsPage() {
 
         {/* Note */}
         <div className="rounded-card-sm border border-line-strong bg-primary-light/30 p-4 text-body2 text-ink-secondary">
-          Promotion management is currently in demo mode. Codes shown above are for display only —
+          Promotion management is not available yet. Codes shown above are for display only —
           use the admin dashboard to create backend-validated promo codes.
         </div>
       </div>

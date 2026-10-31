@@ -60,16 +60,16 @@ export function AdminDiscountListPage() {
     setOpenMenu(null);
   }
   function handleEdit(p: AdminPromo) {
-    toast.show(`Edit is in demo mode — no PATCH endpoint for "${p.code}"`);
+    toast.show(`Edit is not available yet for "${p.code}"`);
     setOpenMenu(null);
   }
   function handleToggle(p: AdminPromo) {
-    toast.show(`${p.isActive ? 'Deactivate' : 'Activate'} is in demo mode — no toggle endpoint for "${p.code}"`);
+    toast.show(`${p.isActive ? 'Deactivate' : 'Activate'} is not available yet for "${p.code}"`);
     setOpenMenu(null);
   }
   function handleDelete(p: AdminPromo) {
     if (!window.confirm(`Delete discount "${p.code}"? This cannot be undone.`)) return;
-    toast.show(`Delete is in demo mode — no DELETE endpoint for "${p.code}"`);
+    toast.show(`Delete is not available yet for "${p.code}"`);
     setOpenMenu(null);
   }
 

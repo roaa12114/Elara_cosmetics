@@ -3,7 +3,7 @@ import { Camera, Upload } from 'lucide-react';
 import { AdminNavbar } from '../components/AdminNavbar';
 import { useToast } from '@/shared/ui';
 
-function Field({ label, type = 'text', placeholder = 'Type Something' }: { label: string; type?: string; placeholder?: string }) {
+function Field({ label, type = 'text', placeholder = 'Enter value' }: { label: string; type?: string; placeholder?: string }) {
   return (
     <div className="flex flex-col" style={{ gap: '6px' }}>
       <label className="text-ink-secondary" style={{ fontSize: '14px' }}>{label}</label>
@@ -94,7 +94,7 @@ export function AdminAddSellerPage() {
 
         <div className="flex items-center justify-end" style={{ gap: '12px' }}>
           <Link to="/admin/sellers" className="text-ink-secondary no-underline" style={{ fontSize: '16px', fontWeight: 500, padding: '8px 16px' }}>Cancel</Link>
-          <button onClick={() => toast.show('Seller creation is in demo mode — no backend endpoint available')} className="bg-ink text-white" style={{ borderRadius: 'var(--radius-pill)', padding: '8px 24px', fontSize: '16px', fontWeight: 500, height: '48px' }}>Save</button>
+          <button onClick={() => toast.show('Seller creation is not available yet')} className="bg-ink text-white" style={{ borderRadius: 'var(--radius-pill)', padding: '8px 24px', fontSize: '16px', fontWeight: 500, height: '48px' }}>Save</button>
         </div>
       </div>
     </div>

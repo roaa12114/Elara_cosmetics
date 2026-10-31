@@ -55,7 +55,7 @@ export function AdminOrderListPage() {
   const cancelled = mockOrders.filter((o) => o.status === 'cancelled').length;
 
   function handleRefund(o: AdminOrderRow) {
-    toast.show(`Refund is in demo mode — no backend endpoint for ${o.orderId}`);
+    toast.show(`Refund is not available yet for ${o.orderId}`);
     setOpenMenu(null);
   }
   function handlePrint(o: AdminOrderRow) {
@@ -78,7 +78,7 @@ export function AdminOrderListPage() {
             <h1 className="font-bold text-ink" style={{ fontSize: '20px' }}>Order Management</h1>
             <p className="text-ink-faint" style={{ fontSize: '14px' }}>Manage and track all customer orders</p>
           </div>
-          <button onClick={() => toast.show('Export is in demo mode — no export endpoint')} className="flex items-center bg-white text-ink" style={{ border: '1px solid var(--color-line)', borderRadius: 'var(--radius-pill)', padding: '8px 16px', gap: '8px', fontSize: '16px', fontWeight: 500, height: '48px' }}>
+          <button onClick={() => toast.show('Export is not available yet — no export endpoint')} className="flex items-center bg-white text-ink" style={{ border: '1px solid var(--color-line)', borderRadius: 'var(--radius-pill)', padding: '8px 16px', gap: '8px', fontSize: '16px', fontWeight: 500, height: '48px' }}>
             <Download className="w-5 h-5" /> Export Orders
           </button>
         </div>

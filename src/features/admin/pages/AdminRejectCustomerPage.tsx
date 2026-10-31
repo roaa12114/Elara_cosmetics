@@ -78,7 +78,7 @@ export function AdminRejectCustomerPage() {
           <Link to={`/admin/customers/${user._id}`} className="text-ink-secondary no-underline" style={{ fontSize: '16px', fontWeight: 500, padding: '8px 16px' }}>Cancel</Link>
           <Link
             to={`/admin/customers/${user._id}/rejected`}
-            onClick={() => toast.show('Rejection is in demo mode — no backend endpoint')}
+            onClick={() => toast.show('Rejection is not available yet')}
             className="flex items-center bg-danger-dark text-white no-underline"
             style={{ borderRadius: 'var(--radius-pill)', padding: '8px 24px', fontSize: '16px', fontWeight: 500, height: '48px', gap: '8px' }}
           >

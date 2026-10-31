@@ -17,7 +17,7 @@ export function AdminCustomerDetailPage() {
   const { id } = useParams();
   const { data, isLoading } = useAdminUsers({ role: 'customer', limit: 100 });
   const user = data?.users?.find((u) => u._id === id);
-  const d = adminCustomerDetail; // static stats + orders
+  const d = adminCustomerDetail;
   const st = STATUS_STYLES[user?.isActive ? 'Active' : 'Blocked'] ?? STATUS_STYLES.Active;
 
   if (isLoading) return (<div className="flex flex-col min-h-screen"><AdminNavbar /><div className="flex-1 flex items-center justify-center"><p className="text-ink-faint">Loading...</p></div></div>);

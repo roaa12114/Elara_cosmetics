@@ -49,12 +49,12 @@ export function AdminCategoryListPage() {
   const productsAssigned = allCategories.reduce((sum, c) => sum + getProductsCountForCategory(c._id), 0);
 
   function handleDeactivate(c: Category) {
-    toast.show(`Deactivate is in demo mode — no backend endpoint for "${c.name}"`);
+    toast.show(`Deactivate is not available yet for "${c.name}"`);
     setOpenMenu(null);
   }
   function handleDelete(c: Category) {
     if (!window.confirm(`Delete "${c.name}"? This cannot be undone.`)) return;
-    toast.show(`Delete is in demo mode — no backend endpoint for "${c.name}"`);
+    toast.show(`Delete is not available yet for "${c.name}"`);
     setOpenMenu(null);
   }
 

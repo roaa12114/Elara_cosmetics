@@ -12,7 +12,7 @@ export function AdminSettingsTeamPage() {
       <div className="flex flex-col" style={{ padding: '32px', gap: '24px' }}>
         <div className="flex items-center justify-between">
           <Link to="/admin/settings" className="flex items-center text-ink-secondary hover:text-ink no-underline" style={{ gap: '8px', fontSize: '16px' }}><ArrowLeft className="w-5 h-5" /> Back to Settings</Link>
-          <button onClick={() => toast.show('Invite member is in demo mode')} className="flex items-center bg-ink text-white" style={{ borderRadius: 'var(--radius-pill)', padding: '8px 16px', gap: '8px', fontSize: '16px', fontWeight: 500, height: '48px' }}><Plus className="w-5 h-5" /> Invite Member</button>
+          <button onClick={() => toast.show('Invite member is not available yet')} className="flex items-center bg-ink text-white" style={{ borderRadius: 'var(--radius-pill)', padding: '8px 16px', gap: '8px', fontSize: '16px', fontWeight: 500, height: '48px' }}><Plus className="w-5 h-5" /> Invite Member</button>
         </div>
         <h1 className="font-bold text-ink" style={{ fontSize: '20px' }}>Team Members</h1>
 
@@ -39,8 +39,8 @@ export function AdminSettingsTeamPage() {
                   <td className="text-ink-faint" style={{ padding: '12px 16px', fontSize: '14px' }}>{m.lastActive}</td>
                   <td style={{ padding: '12px 16px', textAlign: 'center' }}>
                     {m.status === 'Invited'
-                      ? <button onClick={() => toast.show('Resend invite is in demo mode')} className="text-brand" style={{ fontSize: '14px' }}>Resend</button>
-                      : <button onClick={() => toast.show('View member is in demo mode')} className="text-brand" style={{ fontSize: '14px' }}>View</button>}
+                      ? <button onClick={() => toast.show('Resend invite is not available yet')} className="text-brand" style={{ fontSize: '14px' }}>Resend</button>
+                      : <button onClick={() => toast.show('View member is not available yet')} className="text-brand" style={{ fontSize: '14px' }}>View</button>}
                   </td>
                 </tr>
               ))}
@@ -67,7 +67,7 @@ export function AdminSettingsTeamPage() {
 
         <div className="flex items-center justify-end" style={{ gap: '12px' }}>
           <Link to="/admin/settings" className="text-ink-secondary no-underline" style={{ fontSize: '16px', fontWeight: 500, padding: '8px 16px' }}>Cancel</Link>
-          <button onClick={() => toast.show('Team settings are in demo mode')} className="bg-ink text-white" style={{ borderRadius: 'var(--radius-pill)', padding: '8px 24px', fontSize: '16px', fontWeight: 500, height: '48px' }}>Save Changes</button>
+          <button onClick={() => toast.show('Team settings are not available yet')} className="bg-ink text-white" style={{ borderRadius: 'var(--radius-pill)', padding: '8px 24px', fontSize: '16px', fontWeight: 500, height: '48px' }}>Save Changes</button>
         </div>
       </div>
     </div>

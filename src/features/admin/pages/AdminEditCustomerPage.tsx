@@ -45,7 +45,7 @@ export function AdminEditCustomerPage() {
 
         <div className="flex items-center justify-end" style={{ gap: '12px' }}>
           <Link to={`/admin/customers/${user._id}`} className="text-ink-secondary no-underline" style={{ fontSize: '16px', fontWeight: 500, padding: '8px 16px' }}>Cancel</Link>
-          <button onClick={() => toast.show('Profile editing is in demo mode — no PATCH endpoint available')} className="bg-ink text-white" style={{ borderRadius: 'var(--radius-pill)', padding: '8px 24px', fontSize: '16px', fontWeight: 500, height: '48px' }}>Save Changes</button>
+          <button onClick={() => toast.show('Profile editing is not available yet — no PATCH endpoint available')} className="bg-ink text-white" style={{ borderRadius: 'var(--radius-pill)', padding: '8px 24px', fontSize: '16px', fontWeight: 500, height: '48px' }}>Save Changes</button>
         </div>
       </div>
     </div>

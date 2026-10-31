@@ -52,7 +52,7 @@ export function AdminSettingsProfilePage() {
 
         <div className="flex items-center justify-end" style={{ gap: '12px' }}>
           <Link to="/admin/settings" className="text-ink-secondary no-underline" style={{ fontSize: '16px', fontWeight: 500, padding: '8px 16px' }}>Cancel</Link>
-          <button onClick={() => toast.show('Profile settings are in demo mode — no backend endpoint')} className="bg-ink text-white" style={{ borderRadius: 'var(--radius-pill)', padding: '8px 24px', fontSize: '16px', fontWeight: 500, height: '48px' }}>Save Changes</button>
+          <button onClick={() => toast.show('Profile settings are not available yet — no backend endpoint')} className="bg-ink text-white" style={{ borderRadius: 'var(--radius-pill)', padding: '8px 24px', fontSize: '16px', fontWeight: 500, height: '48px' }}>Save Changes</button>
         </div>
       </div>
     </div>

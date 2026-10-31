@@ -69,7 +69,7 @@ export function AdminSellerBlockPage() {
         {/* Actions */}
         <div className="flex items-center justify-end" style={{ gap: '12px' }}>
           <Link to={`/admin/sellers/${seller._id}`} className="text-ink-secondary no-underline" style={{ fontSize: '16px', fontWeight: 500, padding: '8px 16px' }}>Cancel</Link>
-          <Link to={`/admin/sellers/${seller._id}/blocked`} onClick={() => toast.show('Block is in demo mode — no backend endpoint available')} className="flex items-center bg-danger-dark text-white no-underline" style={{ borderRadius: 'var(--radius-pill)', padding: '8px 24px', fontSize: '16px', fontWeight: 500, height: '48px' }}>Block Seller</Link>
+          <Link to={`/admin/sellers/${seller._id}/blocked`} onClick={() => toast.show('Block is not available yet')} className="flex items-center bg-danger-dark text-white no-underline" style={{ borderRadius: 'var(--radius-pill)', padding: '8px 24px', fontSize: '16px', fontWeight: 500, height: '48px' }}>Block Seller</Link>
         </div>
       </div>
     </div>

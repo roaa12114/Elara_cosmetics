@@ -14,16 +14,16 @@ export function AdminShippingPage() {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
 
   function handleToggle(item: ShippingMethod | DeliveryArea) {
-    toast.show(`${item.isActive ? 'Disable' : 'Enable'} is in demo mode — no backend endpoint for "${item.name}"`);
+    toast.show(`${item.isActive ? 'Disable' : 'Enable'} is not available yet for "${item.name}"`);
     setOpenMenu(null);
   }
   function handleEdit(item: ShippingMethod | DeliveryArea) {
-    toast.show(`Edit is in demo mode — no backend endpoint for "${item.name}"`);
+    toast.show(`Edit is not available yet for "${item.name}"`);
     setOpenMenu(null);
   }
   function handleDelete(item: ShippingMethod | DeliveryArea) {
     if (!window.confirm(`Delete "${item.name}"? This cannot be undone.`)) return;
-    toast.show(`Delete is in demo mode — no backend endpoint for "${item.name}"`);
+    toast.show(`Delete is not available yet for "${item.name}"`);
     setOpenMenu(null);
   }
 
@@ -37,7 +37,7 @@ export function AdminShippingPage() {
             <p className="text-ink-faint" style={{ fontSize: '14px' }}>Manage shipping methods and delivery areas</p>
           </div>
           <button
-            onClick={() => toast.show(tab === 'methods' ? 'Add shipping method is in demo mode' : 'Add delivery area is in demo mode')}
+            onClick={() => toast.show(tab === 'methods' ? 'Add shipping method is not available yet' : 'Add delivery area is not available yet')}
             className="flex items-center bg-ink text-white"
             style={{ borderRadius: 'var(--radius-pill)', padding: '8px 16px', gap: '8px', fontSize: '16px', fontWeight: 500, height: '48px' }}
           >
@@ -156,7 +156,7 @@ export function AdminShippingPage() {
           </div>
         )}
 
-        <p className="text-ink-faint" style={{ fontSize: '12px' }}>Shipping data is frontend mock — the backend has no shipping endpoints yet.</p>
+        <p className="text-ink-faint" style={{ fontSize: '12px' }}>Shipping configuration is managed here.</p>
       </div>
     </div>
   );

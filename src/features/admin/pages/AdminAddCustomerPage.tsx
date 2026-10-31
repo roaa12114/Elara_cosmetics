@@ -48,7 +48,7 @@ export function AdminAddCustomerPage() {
 
         <div className="flex items-center justify-end" style={{ gap: '12px' }}>
           <Link to="/admin/customers" className="text-ink-secondary no-underline" style={{ fontSize: '16px', fontWeight: 500, padding: '8px 16px' }}>Cancel</Link>
-          <button onClick={() => toast.show('Customer creation is in demo mode — backend endpoint not available')} className="bg-ink text-white" style={{ borderRadius: 'var(--radius-pill)', padding: '8px 24px', fontSize: '16px', fontWeight: 500, height: '48px' }}>Save</button>
+          <button onClick={() => toast.show('Customer creation is not available yet')} className="bg-ink text-white" style={{ borderRadius: 'var(--radius-pill)', padding: '8px 24px', fontSize: '16px', fontWeight: 500, height: '48px' }}>Save</button>
         </div>
       </div>
     </div>
@@ -59,7 +59,7 @@ function Field({ label, type }: { label: string; type?: string }) {
   return (
     <div className="flex flex-col" style={{ gap: '6px' }}>
       <label className="text-ink-secondary" style={{ fontSize: '14px' }}>{label}</label>
-      <input type={type ?? 'text'} placeholder="Type Something" className="w-full bg-white text-ink" style={{ border: '1px solid var(--color-line)', borderRadius: '8px', padding: '12px', fontSize: '14px', height: '40px' }} />
+      <input type={type ?? 'text'} placeholder="Enter value" className="w-full bg-white text-ink" style={{ border: '1px solid var(--color-line)', borderRadius: '8px', padding: '12px', fontSize: '14px', height: '40px' }} />
     </div>
   );
 }

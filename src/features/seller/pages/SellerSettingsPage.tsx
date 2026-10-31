@@ -14,7 +14,7 @@ export function SellerSettingsPage() {
   const user = data?.user;
 
   function handleSave() {
-    toast.show('Settings saved (demo mode — backend endpoint not available)');
+    toast.show('Settings saved (not available yet)');
   }
 
   if (isLoading) {

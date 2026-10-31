@@ -58,7 +58,7 @@ export function AdminCategorySubcategoriesPage() {
             <p className="text-ink-faint" style={{ fontSize: '14px' }}>Manage subcategories within {category.name}</p>
           </div>
           <button
-            onClick={() => toast.show('Subcategory creation is in demo mode — no backend endpoint')}
+            onClick={() => toast.show('Subcategory creation is not available yet')}
             className="flex items-center bg-ink text-white no-underline"
             style={{ borderRadius: 'var(--radius-pill)', padding: '8px 16px', gap: '8px', fontSize: '16px', fontWeight: 500, height: '48px' }}
           >
@@ -95,11 +95,11 @@ export function AdminCategorySubcategoriesPage() {
                       <button onClick={() => setOpenMenu(openMenu === s._id ? null : s._id)} className="text-ink-faint hover:text-ink"><MoreVertical className="w-4 h-4" /></button>
                       {openMenu === s._id && (
                         <div className="absolute bg-white shadow-lg z-50" style={{ right: '16px', top: '48px', border: '1px solid var(--color-line)', borderRadius: '8px', padding: '4px', minWidth: '160px' }}>
-                          <button onClick={() => { toast.show('Edit subcategory is in demo mode'); setOpenMenu(null); }} className="flex items-center text-ink hover:bg-surface w-full" style={{ padding: '8px 12px', gap: '8px', fontSize: '14px', borderRadius: '4px' }}><Pencil className="w-4 h-4" /> Edit Category</button>
+                          <button onClick={() => { toast.show('Edit subcategory is not available yet'); setOpenMenu(null); }} className="flex items-center text-ink hover:bg-surface w-full" style={{ padding: '8px 12px', gap: '8px', fontSize: '14px', borderRadius: '4px' }}><Pencil className="w-4 h-4" /> Edit Category</button>
                           <button className="flex items-center text-ink hover:bg-surface w-full" style={{ padding: '8px 12px', gap: '8px', fontSize: '14px', borderRadius: '4px' }}><Eye className="w-4 h-4" /> View Products</button>
-                          <button onClick={() => { toast.show('Toggle status is in demo mode'); setOpenMenu(null); }} className="flex items-center text-ink hover:bg-surface w-full" style={{ padding: '8px 12px', gap: '8px', fontSize: '14px', borderRadius: '4px' }}><Ban className="w-4 h-4" /> {s.isActive ? 'Deactivate' : 'Activate'}</button>
+                          <button onClick={() => { toast.show('Toggle status is not available yet'); setOpenMenu(null); }} className="flex items-center text-ink hover:bg-surface w-full" style={{ padding: '8px 12px', gap: '8px', fontSize: '14px', borderRadius: '4px' }}><Ban className="w-4 h-4" /> {s.isActive ? 'Deactivate' : 'Activate'}</button>
                           <div style={{ height: '1px', background: 'var(--color-line)', margin: '4px 0' }} />
-                          <button onClick={() => { toast.show('Delete is in demo mode'); setOpenMenu(null); }} className="flex items-center text-danger-dark hover:bg-danger-dark/5 w-full" style={{ padding: '8px 12px', gap: '8px', fontSize: '14px', borderRadius: '4px' }}><Trash2 className="w-4 h-4" /> Delete</button>
+                          <button onClick={() => { toast.show('Delete is not available yet'); setOpenMenu(null); }} className="flex items-center text-danger-dark hover:bg-danger-dark/5 w-full" style={{ padding: '8px 12px', gap: '8px', fontSize: '14px', borderRadius: '4px' }}><Trash2 className="w-4 h-4" /> Delete</button>
                         </div>
                       )}
                     </td>
@@ -110,7 +110,7 @@ export function AdminCategorySubcategoriesPage() {
           </table>
         </div>
 
-        <p className="text-ink-faint" style={{ fontSize: '12px' }}>Subcategories are frontend mock data — the backend does not have a subcategory concept yet.</p>
+        <p className="text-ink-faint" style={{ fontSize: '12px' }}>Subcategories are managed within each category.</p>
       </div>
     </div>
   );

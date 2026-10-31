@@ -48,9 +48,9 @@ export function AdminContentListPage() {
   const scheduledCount = allBanners.filter((b) => getBannerDisplay(b).status === 'Scheduled').length;
   const inactiveCount = allBanners.filter((b) => getBannerDisplay(b).status === 'Inactive').length;
 
-  function handleEdit(b: AdminBanner) { toast.show(`Edit is in demo mode — no PATCH endpoint for "${b.title}"`); setOpenMenu(null); }
-  function handleToggle(b: AdminBanner) { toast.show(`${b.isActive ? 'Deactivate' : 'Activate'} is in demo mode for "${b.title}"`); setOpenMenu(null); }
-  function handleDelete(b: AdminBanner) { if (!window.confirm(`Delete "${b.title}"?`)) return; toast.show(`Delete is in demo mode — no DELETE endpoint for "${b.title}"`); setOpenMenu(null); }
+  function handleEdit(b: AdminBanner) { toast.show(`Edit is not available yet for "${b.title}"`); setOpenMenu(null); }
+  function handleToggle(b: AdminBanner) { toast.show(`${b.isActive ? 'Deactivate' : 'Activate'} is not available yet for "${b.title}"`); setOpenMenu(null); }
+  function handleDelete(b: AdminBanner) { if (!window.confirm(`Delete "${b.title}"?`)) return; toast.show(`Delete is not available yet for "${b.title}"`); setOpenMenu(null); }
 
   return (
     <div className="flex flex-col min-h-screen">
