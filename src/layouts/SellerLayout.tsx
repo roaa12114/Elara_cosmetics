@@ -8,7 +8,6 @@ import {
   ShoppingCart,
   Wallet,
   Banknote,
-  Tag,
   Settings,
   LogOut,
   Percent,
@@ -35,7 +34,7 @@ const navItems: NavItem[] = [
 ];
 
 export function SellerLayout() {
-  const { user, signOut } = useAuth();
+  const { signOut } = useAuth();
   const navigate = useNavigate();
 
   function handleSignOut() {

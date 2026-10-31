@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Camera } from 'lucide-react';
+import {  Camera } from 'lucide-react';
 import { AdminNavbar } from '../components/AdminNavbar';
 import { useToast } from '@/shared/ui';
 

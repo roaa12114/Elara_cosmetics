@@ -9,7 +9,6 @@ const STATUS_STYLES: Record<string, { bg: string; text: string }> = {
 };
 
 export function SellerPromoDetailPage() {
-  const { id } = useParams();
   const d = promoCodeDetail;
   const st = STATUS_STYLES[d.status] ?? { bg: 'var(--color-status-out-of-stock-bg)', text: '#171315' };
   const maxUsage = Math.max(...d.usageOverTime.map((u) => u.value));

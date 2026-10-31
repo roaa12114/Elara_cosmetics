@@ -11,7 +11,6 @@ const STATUS_STYLES: Record<string, { bg: string; text: string }> = {
 const TIMELINE_ICONS = [Clock, CheckCircle2, Package, Truck, Truck, Home];
 
 export function SellerOrderDetailPage() {
-  const { id } = useParams();
   const order = sellerOrderDetail;
   const st = STATUS_STYLES[order.status] ?? STATUS_STYLES.Delivered;
   const paySt = STATUS_STYLES[order.payment] ?? STATUS_STYLES.Paid;

@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, Trash2, Printer, Tag } from 'lucide-react';
+import {  Trash2, Printer, Tag } from 'lucide-react';
 import { SellerNavbar } from '../components/SellerNavbar';
 import { discountDetail } from '../data/sellerStaticData';
 import { formatCurrency } from '@shared/lib/utils';

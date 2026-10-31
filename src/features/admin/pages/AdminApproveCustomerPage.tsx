@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, CheckCircle2, FileText } from 'lucide-react';
+import {  CheckCircle2, FileText } from 'lucide-react';
 import { AdminNavbar } from '../components/AdminNavbar';
 import { useAdminUsers } from '@shared/hooks/useAdminUsers';
 import { formatDate } from '@shared/lib/utils';
