@@ -35,7 +35,7 @@ import { AdminBlockCustomerPage } from "@features/admin/pages/AdminBlockCustomer
 import { AdminUnblockCustomerPage } from "@features/admin/pages/AdminUnblockCustomerPage";
 import { AdminApproveCustomerPage } from "@features/admin/pages/AdminApproveCustomerPage";
 import { AdminRejectCustomerPage } from "@features/admin/pages/AdminRejectCustomerPage";
-import { AdminApprovedSuccessPage } from "@features/admin/pages/AdminApproveCustomerPage";
+import { AdminApprovedSuccessPage } from "@features/admin/pages/AdminApprovedSuccessPage";
 import { AdminRejectedSuccessPage } from "@features/admin/pages/AdminRejectedSuccessPage";
 import { AdminOrderDetailPage } from "@features/admin/pages/AdminOrderDetailPage";
 import { NotFoundPage } from "@pages/NotFoundPage";
@@ -46,6 +46,41 @@ import { ProductDetailPage } from "@features/customer/pages/ProductDetailPage";
 import { BundlesPage } from "@features/customer/pages/BundlesPage";
 import { BundleDetailPage } from "@features/customer/pages/BundleDetailPage";
 import { OffersPage } from "@features/customer/pages/OffersPage";
+import { AdminSellerListPage } from "@features/admin/pages/AdminSellerListPage";
+import { AdminAddSellerPage } from "@features/admin/pages/AdminAddSellerPage";
+import { AdminSellerDetailPage } from "@features/admin/pages/AdminSellerDetailPage";
+import { AdminEditSellerPage } from "@features/admin/pages/AdminEditSellerPage";
+import { AdminSellerApplicationPage } from "@features/admin/pages/AdminSellerApplicationPage";
+import { AdminSellerApprovePage } from "@features/admin/pages/AdminSellerApprovePage";
+import { AdminSellerApprovedSuccessPage } from "@features/admin/pages/AdminSellerApprovedSuccessPage";
+import { AdminSellerRejectPage } from "@features/admin/pages/AdminSellerRejectPage";
+import { AdminSellerRejectedSuccessPage } from "@features/admin/pages/AdminSellerRejectedSuccessPage";
+import { AdminSellerBlockPage } from "@features/admin/pages/AdminSellerBlockPage";
+import { AdminSellerBlockedSuccessPage } from "@features/admin/pages/AdminSellerBlockedSuccessPage";
+import { AdminSellerUnblockPage } from "@features/admin/pages/AdminSellerUnblockPage";
+import { AdminSellerUnblockedSuccessPage } from "@features/admin/pages/AdminSellerUnblockedSuccessPage";
+import { AdminCategoryListPage } from "@features/admin/pages/AdminCategoryListPage";
+import { AdminAddCategoryPage } from "@features/admin/pages/AdminAddCategoryPage";
+import { AdminEditCategoryPage } from "@features/admin/pages/AdminEditCategoryPage";
+import { AdminCategorySubcategoriesPage } from "@features/admin/pages/AdminCategorySubcategoriesPage";
+import { AdminOrderListPage } from "@features/admin/pages/AdminOrderListPage";
+import { AdminOrderUpdateStatusPage } from "@features/admin/pages/AdminOrderUpdateStatusPage";
+import { AdminDiscountListPage } from "@features/admin/pages/AdminDiscountListPage";
+import { AdminCreateDiscountPage } from "@features/admin/pages/AdminCreateDiscountPage";
+import { AdminDiscountCreatedSuccessPage } from "@features/admin/pages/AdminDiscountCreatedSuccessPage";
+import { AdminShippingPage } from "@features/admin/pages/AdminShippingPage";
+import { AdminContentListPage } from "@features/admin/pages/AdminContentListPage";
+import { AdminAddBannerPage } from "@features/admin/pages/AdminAddBannerPage";
+import { AdminBannerPreviewPage } from "@features/admin/pages/AdminBannerPreviewPage";
+import { AdminAnalyticsPage } from "@features/admin/pages/AdminAnalyticsPage";
+import { AdminSettingsPage } from "@features/admin/pages/AdminSettingsPage";
+import { AdminSettingsProfilePage } from "@features/admin/pages/AdminSettingsProfilePage";
+import { AdminSettingsNotificationsPage } from "@features/admin/pages/AdminSettingsNotificationsPage";
+import { AdminSettingsStorePage } from "@features/admin/pages/AdminSettingsStorePage";
+import { AdminSettingsPaymentPage } from "@features/admin/pages/AdminSettingsPaymentPage";
+import { AdminSettingsShippingPage } from "@features/admin/pages/AdminSettingsShippingPage";
+import { AdminSettingsSecurityPage } from "@features/admin/pages/AdminSettingsSecurityPage";
+import { AdminSettingsTeamPage } from "@features/admin/pages/AdminSettingsTeamPage";
 
 export function AppRouter() {
   return (
@@ -151,13 +186,108 @@ export function AppRouter() {
         <Route path="customers/new" element={<AdminAddCustomerPage />} />
         <Route path="customers/:id" element={<AdminCustomerDetailPage />} />
         <Route path="customers/:id/edit" element={<AdminEditCustomerPage />} />
-        <Route path="customers/:id/block" element={<AdminBlockCustomerPage />} />
-        <Route path="customers/:id/unblock" element={<AdminUnblockCustomerPage />} />
-        <Route path="customers/:id/approve" element={<AdminApproveCustomerPage />} />
-        <Route path="customers/:id/reject" element={<AdminRejectCustomerPage />} />
-        <Route path="customers/:id/approved" element={<AdminApprovedSuccessPage />} />
-        <Route path="customers/:id/rejected" element={<AdminRejectedSuccessPage />} />
-        <Route path="customers/:id/orders/:orderId" element={<AdminOrderDetailPage />} />
+        <Route
+          path="customers/:id/block"
+          element={<AdminBlockCustomerPage />}
+        />
+        <Route
+          path="customers/:id/unblock"
+          element={<AdminUnblockCustomerPage />}
+        />
+        <Route
+          path="customers/:id/approve"
+          element={<AdminApproveCustomerPage />}
+        />
+        <Route
+          path="customers/:id/reject"
+          element={<AdminRejectCustomerPage />}
+        />
+        <Route
+          path="customers/:id/approved"
+          element={<AdminApprovedSuccessPage />}
+        />
+        <Route
+          path="customers/:id/rejected"
+          element={<AdminRejectedSuccessPage />}
+        />
+        <Route
+          path="customers/:id/orders/:orderId"
+          element={<AdminOrderDetailPage />}
+        />
+        {/*Seller*/}
+        <Route path="sellers" element={<AdminSellerListPage />} />
+        <Route path="sellers/new" element={<AdminAddSellerPage />} />
+        <Route path="sellers/:id" element={<AdminSellerDetailPage />} />
+        <Route path="sellers/:id/edit" element={<AdminEditSellerPage />} />
+        <Route
+          path="sellers/:id/application"
+          element={<AdminSellerApplicationPage />}
+        />
+        <Route
+          path="sellers/:id/approve"
+          element={<AdminSellerApprovePage />}
+        />
+        <Route
+          path="sellers/:id/approved"
+          element={<AdminSellerApprovedSuccessPage />}
+        />
+        <Route path="sellers/:id/reject" element={<AdminSellerRejectPage />} />
+        <Route
+          path="sellers/:id/rejected"
+          element={<AdminSellerRejectedSuccessPage />}
+        />
+        <Route path="sellers/:id/block" element={<AdminSellerBlockPage />} />
+        <Route
+          path="sellers/:id/blocked"
+          element={<AdminSellerBlockedSuccessPage />}
+        />
+        <Route
+          path="sellers/:id/unblock"
+          element={<AdminSellerUnblockPage />}
+        />
+        <Route
+          path="sellers/:id/unblocked"
+          element={<AdminSellerUnblockedSuccessPage />}
+        />
+        {/* category*/}
+        <Route path="categories" element={<AdminCategoryListPage />} />
+        <Route path="categories/new" element={<AdminAddCategoryPage />} />
+        <Route path="categories/:id/edit" element={<AdminEditCategoryPage />} />
+        <Route
+          path="categories/:id/subcategories"
+          element={<AdminCategorySubcategoriesPage />}
+        />
+        {/* Order  */}
+        <Route path="orders" element={<AdminOrderListPage />} />
+        <Route path="orders/:orderId" element={<AdminOrderDetailPage />} />
+        <Route
+          path="orders/:orderId/status"
+          element={<AdminOrderUpdateStatusPage />}
+        />
+        {/* Discount  */}
+        <Route path="discounts" element={<AdminDiscountListPage />} />
+        <Route path="discounts/new" element={<AdminCreateDiscountPage />} />
+        <Route
+          path="discounts/:code/created"
+          element={<AdminDiscountCreatedSuccessPage />}
+        />
+        {/* Shipping routes */}
+        <Route path="shipping" element={<AdminShippingPage />} />
+        {/* Content routes */}
+        <Route path="content" element={<AdminContentListPage />} />
+        <Route path="content/new" element={<AdminAddBannerPage />} />
+        <Route path="content/:id" element={<AdminBannerPreviewPage />} />
+        {/* Analytics routes */}
+        <Route path="analytics" element={<AdminAnalyticsPage />} />
+      {/* Settings routes */}
+<Route path="settings" element={<AdminSettingsPage />} />
+<Route path="settings/profile" element={<AdminSettingsProfilePage />} />
+<Route path="settings/notifications" element={<AdminSettingsNotificationsPage />} />
+<Route path="settings/store" element={<AdminSettingsStorePage />} />
+<Route path="settings/payment" element={<AdminSettingsPaymentPage />} />
+<Route path="settings/shipping" element={<AdminSettingsShippingPage />} />
+<Route path="settings/security" element={<AdminSettingsSecurityPage />} />
+<Route path="settings/team-members" element={<AdminSettingsTeamPage />} />
       </Route>
 
       <Route path="*" element={<NotFoundPage />} />
