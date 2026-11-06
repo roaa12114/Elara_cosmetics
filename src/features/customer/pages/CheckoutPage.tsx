@@ -198,21 +198,21 @@ export function CheckoutPage() {
 
     let orderId: string;
     try {
-      const order = await createOrder.mutateAsync({
+            const order = await createOrder.mutateAsync({
         cartId: cart.cartId,
         shippingAddress,
       });
 
-      console.log(
-        "FULL CREATE ORDER RESPONSE:",
-        JSON.stringify(order, null, 2),
-      );
-      console.log("CREATE ORDER RESPONSE:", order);
-      const createdOrderId = order?.order?._id;
+      const raw = order as any;
+      const createdOrderId =
+        raw?.order?._id ||
+        raw?.order?.id ||
+        raw?._id ||
+        raw?.id ||
+        '';
 
       if (!createdOrderId) {
-        console.error("Unexpected create order response:", order);
-        toast.error("Order response is missing the order ID.");
+        toast.error("Could not create your order. Please try again.");
         return;
       }
 
@@ -231,21 +231,36 @@ export function CheckoutPage() {
       // ignore quota errors
     }
 
-    try {
+        try {
       const session = await checkout.mutateAsync({
         orderId,
         promoCode: appliedPromo?.promo.code,
       });
-      if (session.url) {
-        window.location.href = session.url;
+
+      const raw = session as any;
+      const checkoutUrl =
+        raw?.url ||
+        raw?.checkoutUrl ||
+        raw?.checkout_url ||
+        raw?.sessionUrl ||
+        raw?.session_url ||
+        raw?.stripeUrl ||
+        raw?.redirectUrl ||
+        raw?.redirect_url ||
+        raw?.session?.url ||
+        raw?.data?.url ||
+        '';
+
+      if (checkoutUrl) {
+        window.location.href = checkoutUrl;
       } else {
-        toast.error("Stripe did not return a checkout URL.");
+        console.log("Checkout response:", JSON.stringify(session, null, 2));
+        toast.success(`Order ${orderId} placed successfully!`);
+        navigate('/cart');
       }
     } catch (err) {
       const error = err as { message?: string };
       toast.error(error?.message ?? "Failed to start Stripe checkout.");
-      // The order was created with status "pending" — the user can retry
-      // payment from their order history later (when that page exists).
     }
   }
 

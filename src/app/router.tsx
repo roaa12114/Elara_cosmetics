@@ -11,7 +11,6 @@ import { SellerSignInPage } from "@features/seller/pages/SellerSignInPage";
 import { SellerSignUpPage } from "@features/seller/pages/SellerSignUpPage";
 import { HomePage } from "@features/customer/pages/HomePage";
 import { SellerOverviewPage } from "@features/seller/pages/SellerOverviewPage";
-import { SellerDashboardPage } from "@features/seller/pages/SellerDashboardPage";
 import { SellerProductsPage } from "@features/seller/pages/SellerProductsPage";
 import { SellerAddProductPage } from "@features/seller/pages/SellerAddProductPage";
 import { SellerEditProductPage } from "@features/seller/pages/SellerEditProductPage";
@@ -27,6 +26,8 @@ import { SellerDiscountsPage } from "@features/seller/pages/SellerDiscountsPage"
 import { SellerDiscountDetailPage } from "@features/seller/pages/SellerDiscountDetailPage";
 import { SellerPromoCodesPage } from "@features/seller/pages/SellerPromoCodesPage";
 import { SellerPromoDetailPage } from "@features/seller/pages/SellerPromoDetailPage";
+import { SalesAnalyticsPage } from "@features/seller/pages/SalesAnalyticsPage";
+import { SalesOverViewPage } from "@features/seller/pages/SalesOverViewPage";
 import { AdminDashboardPage } from "@features/admin/pages/AdminDashboardPage";
 import { AdminCustomerListPage } from "@features/admin/pages/AdminCustomerListPage";
 import { AdminAddCustomerPage } from "@features/admin/pages/AdminAddCustomerPage";
@@ -189,6 +190,9 @@ export function AppRouter() {
         }
       >
         <Route index element={<SellerOverviewPage />} />{" "}
+        <Route index element={<SellerOverviewPage />} />
+        <Route path="analytics" element={<SalesAnalyticsPage />} />
+        <Route path="sales" element={<SalesOverViewPage />} />
         <Route path="products" element={<SellerProductsPage />} />
         <Route path="products/new" element={<SellerAddProductPage />} />
         <Route path="products/:id" element={<SellerProductDetailPage />} />
