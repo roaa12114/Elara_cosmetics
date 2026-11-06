@@ -10,6 +10,7 @@ import { ConfirmEmailPage } from "@features/auth/pages/ConfirmEmailPage";
 import { SellerSignInPage } from "@features/seller/pages/SellerSignInPage";
 import { SellerSignUpPage } from "@features/seller/pages/SellerSignUpPage";
 import { HomePage } from "@features/customer/pages/HomePage";
+import { SellerOverviewPage } from "@features/seller/pages/SellerOverviewPage";
 import { SellerDashboardPage } from "@features/seller/pages/SellerDashboardPage";
 import { SellerProductsPage } from "@features/seller/pages/SellerProductsPage";
 import { SellerAddProductPage } from "@features/seller/pages/SellerAddProductPage";
@@ -81,6 +82,20 @@ import { AdminSettingsPaymentPage } from "@features/admin/pages/AdminSettingsPay
 import { AdminSettingsShippingPage } from "@features/admin/pages/AdminSettingsShippingPage";
 import { AdminSettingsSecurityPage } from "@features/admin/pages/AdminSettingsSecurityPage";
 import { AdminSettingsTeamPage } from "@features/admin/pages/AdminSettingsTeamPage";
+import { CartPage } from "@features/customer/pages/CartPage";
+import { AccountLayout } from "@layouts/AccountLayout";
+
+import { CheckoutPage } from "@features/customer/pages/CheckoutPage";
+
+import { ProfilePage } from "@features/customer/pages/account/ProfilePage";
+import { AddressesPage } from "@features/customer/pages/account/AddressesPage";
+import { MyOrdersPage } from "@features/customer/pages/account/MyOrdersPage";
+import { OrderDetailPage } from "@features/customer/pages/account/OrderDetailPage";
+import { WishlistPage } from "@features/customer/pages/account/WishlistPage";
+import { NotificationsPage } from "@features/customer/pages/account/NotificationsPage";
+import { ReturnsPage } from "@features/customer/pages/account/ReturnsPage";
+import { CancelItemsPage } from "@features/customer/pages/account/CancelItemsPage";
+import { ManageCardsPage } from "@/features/customer/pages/account/ManageCardsPage";
 
 export function AppRouter() {
   return (
@@ -134,15 +149,34 @@ export function AppRouter() {
       {/* Customer tree */}
       <Route path="/" element={<CustomerLayout />}>
         <Route index element={<HomePage />} />
-        <Route path="/brands/:categorySlug" element={<BrandsPage />} />
+
+        {/* Shopping */}
+        <Route path="brands/:categorySlug" element={<BrandsPage />} />
         <Route
-          path="/brands/:categorySlug/:brandSlug"
+          path="brands/:categorySlug/:brandSlug"
           element={<BrandDetailPage />}
         />
-        <Route path="/products/:id" element={<ProductDetailPage />} />
-        <Route path="/bundles" element={<BundlesPage />} />
-        <Route path="/bundles/:bundleSlug" element={<BundleDetailPage />} />
-        <Route path="/offers" element={<OffersPage />} />
+        <Route path="products/:id" element={<ProductDetailPage />} />
+        <Route path="bundles" element={<BundlesPage />} />
+        <Route path="bundles/:bundleSlug" element={<BundleDetailPage />} />
+        <Route path="offers" element={<OffersPage />} />
+
+        {/* Cart & Checkout */}
+        <Route path="cart" element={<CartPage />} />
+        <Route path="checkout" element={<CheckoutPage />} />
+
+        {/* Customer Account */}
+        <Route path="account" element={<AccountLayout />}>
+          <Route path="profile" element={<ProfilePage />} />
+          <Route path="addresses" element={<AddressesPage />} />
+          <Route path="orders" element={<MyOrdersPage />} />
+          <Route path="orders/:id" element={<OrderDetailPage />} />
+          <Route path="wishlist" element={<WishlistPage />} />
+          <Route path="notifications" element={<NotificationsPage />} />
+          <Route path="returns" element={<ReturnsPage />} />
+          <Route path="cards" element={<ManageCardsPage />} />
+          <Route path="cancel-items" element={<CancelItemsPage />} />
+        </Route>
       </Route>
 
       {/* Seller routes */}
@@ -154,7 +188,7 @@ export function AppRouter() {
           </RequireRole>
         }
       >
-        <Route index element={<SellerDashboardPage />} />
+        <Route index element={<SellerOverviewPage />} />{" "}
         <Route path="products" element={<SellerProductsPage />} />
         <Route path="products/new" element={<SellerAddProductPage />} />
         <Route path="products/:id" element={<SellerProductDetailPage />} />
@@ -279,15 +313,27 @@ export function AppRouter() {
         <Route path="content/:id" element={<AdminBannerPreviewPage />} />
         {/* Analytics routes */}
         <Route path="analytics" element={<AdminAnalyticsPage />} />
-      {/* Settings routes */}
-<Route path="settings" element={<AdminSettingsPage />} />
-<Route path="settings/profile" element={<AdminSettingsProfilePage />} />
-<Route path="settings/notifications" element={<AdminSettingsNotificationsPage />} />
-<Route path="settings/store" element={<AdminSettingsStorePage />} />
-<Route path="settings/payment" element={<AdminSettingsPaymentPage />} />
-<Route path="settings/shipping" element={<AdminSettingsShippingPage />} />
-<Route path="settings/security" element={<AdminSettingsSecurityPage />} />
-<Route path="settings/team-members" element={<AdminSettingsTeamPage />} />
+        {/* Settings routes */}
+        <Route path="settings" element={<AdminSettingsPage />} />
+        <Route path="settings/profile" element={<AdminSettingsProfilePage />} />
+        <Route
+          path="settings/notifications"
+          element={<AdminSettingsNotificationsPage />}
+        />
+        <Route path="settings/store" element={<AdminSettingsStorePage />} />
+        <Route path="settings/payment" element={<AdminSettingsPaymentPage />} />
+        <Route
+          path="settings/shipping"
+          element={<AdminSettingsShippingPage />}
+        />
+        <Route
+          path="settings/security"
+          element={<AdminSettingsSecurityPage />}
+        />
+        <Route
+          path="settings/team-members"
+          element={<AdminSettingsTeamPage />}
+        />
       </Route>
 
       <Route path="*" element={<NotFoundPage />} />
