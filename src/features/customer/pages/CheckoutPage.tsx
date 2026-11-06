@@ -180,7 +180,7 @@ export function CheckoutPage() {
 
   async function handlePlaceOrder() {
     if (!isAuthenticated) {
-      +toast.show("Please sign in to place your order.");
+      toast.show("Please sign in to place your order.");
       navigate("/sign-in?redirect=/checkout");
       return;
     }
@@ -198,18 +198,14 @@ export function CheckoutPage() {
 
     let orderId: string;
     try {
-            const order = await createOrder.mutateAsync({
+      const order = await createOrder.mutateAsync({
         cartId: cart.cartId,
         shippingAddress,
       });
 
       const raw = order as any;
       const createdOrderId =
-        raw?.order?._id ||
-        raw?.order?.id ||
-        raw?._id ||
-        raw?.id ||
-        '';
+        raw?.order?._id || raw?.order?.id || raw?._id || raw?.id || "";
 
       if (!createdOrderId) {
         toast.error("Could not create your order. Please try again.");
@@ -231,7 +227,7 @@ export function CheckoutPage() {
       // ignore quota errors
     }
 
-        try {
+    try {
       const session = await checkout.mutateAsync({
         orderId,
         promoCode: appliedPromo?.promo.code,
@@ -249,14 +245,14 @@ export function CheckoutPage() {
         raw?.redirect_url ||
         raw?.session?.url ||
         raw?.data?.url ||
-        '';
+        "";
 
       if (checkoutUrl) {
         window.location.href = checkoutUrl;
       } else {
         console.log("Checkout response:", JSON.stringify(session, null, 2));
         toast.success(`Order ${orderId} placed successfully!`);
-        navigate('/cart');
+        navigate("/cart");
       }
     } catch (err) {
       const error = err as { message?: string };

@@ -1,7 +1,3 @@
-// ===== Admin Analytics static data =====
-// The backend has NO analytics endpoints. All stats, charts, and tables
-// on this page are mock data defined here.
-
 export const analyticsStats = {
   totalRevenue: 47800,
   revenueChange: 12.4,

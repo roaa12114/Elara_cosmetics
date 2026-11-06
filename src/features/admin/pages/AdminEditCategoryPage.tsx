@@ -85,7 +85,7 @@ export function AdminEditCategoryPage() {
             }}>
               {category.isActive ? 'Active' : 'Inactive'}
             </span>
-            <p className="text-ink-faint" style={{ fontSize: '12px' }}>Status changes require a backend PATCH endpoint (not yet available).</p>
+            <p className="text-ink-faint" style={{ fontSize: '12px' }}>Status changes are not available yet..</p>
           </div>
         </div>
 

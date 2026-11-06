@@ -1,4 +1,3 @@
-// ===== Admin Settings static data =====
 export interface TeamMember {
   _id: string;
   name: string;

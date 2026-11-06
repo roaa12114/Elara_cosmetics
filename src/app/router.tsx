@@ -189,7 +189,6 @@ export function AppRouter() {
           </RequireRole>
         }
       >
-        <Route index element={<SellerOverviewPage />} />{" "}
         <Route index element={<SellerOverviewPage />} />
         <Route path="analytics" element={<SalesAnalyticsPage />} />
         <Route path="sales" element={<SalesOverViewPage />} />

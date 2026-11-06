@@ -28,20 +28,14 @@ export function AdminCustomerListPage() {
   const [page, setPage] = useState(1);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
 
-  // Fetch a large batch — the backend's /admin/users endpoint only supports
-  // page + limit (confirmed in the Postman collection). isActive / search are
-  // silently ignored, so we filter client-side.
   const { data, isLoading } = useAdminUsers({ role: 'customer', limit: 100 });
   const allUsers: AdminUser[] = data?.users ?? [];
 
-  // Client-side filter + search
   const filteredUsers = useMemo(() => {
     const q = search.trim().toLowerCase();
     return allUsers.filter((u) => {
-      // Status filter
       if (filter === 'Active' && !u.isActive) return false;
       if (filter === 'Blocked' && u.isActive) return false;
-      // Search filter (name or email, case-insensitive)
       if (q) {
         if (!u.name.toLowerCase().includes(q) && !u.email.toLowerCase().includes(q)) return false;
       }
@@ -49,7 +43,6 @@ export function AdminCustomerListPage() {
     });
   }, [allUsers, filter, search]);
 
-  // Client-side pagination on the filtered set
   const total = filteredUsers.length;
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   const currentPage = Math.min(page, totalPages);
